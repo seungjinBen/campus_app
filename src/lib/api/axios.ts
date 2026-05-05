@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
   timeout: 10000,
 });
@@ -44,9 +44,8 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const baseURL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
         const { data } = await axios.post(
-          `${baseURL}/api/auth/refresh`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
           {},
           { withCredentials: true }
         );
