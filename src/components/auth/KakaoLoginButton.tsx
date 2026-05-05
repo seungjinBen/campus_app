@@ -2,16 +2,22 @@
 
 import { getKakaoAuthUrl } from '@/lib/api/auth';
 
-export default function KakaoLoginButton() {
+interface Props {
+  disabled?: boolean;
+}
+
+export default function KakaoLoginButton({ disabled = false }: Props) {
   const handleLogin = () => {
+    if (disabled) return;
     window.location.href = getKakaoAuthUrl();
   };
 
   return (
     <button
       onClick={handleLogin}
-      className="flex items-center justify-center gap-3 w-full max-w-xs py-3.5 px-6 rounded-2xl font-medium text-[#191919] transition-all active:scale-95"
-      style={{ backgroundColor: '#FEE500' }}
+      disabled={disabled}
+      className="flex items-center justify-center gap-3 w-full max-w-xs py-3.5 px-6 rounded-2xl font-medium transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
+      style={{ backgroundColor: '#FEE500', color: '#191919' }}
     >
       <svg width="20" height="20" viewBox="0 0 18 18" fill="none" aria-hidden="true">
         <path

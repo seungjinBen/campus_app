@@ -127,7 +127,7 @@ export default function ProfilePage() {
 
       <Input
         label="대학교 (선택)"
-        placeholder="예) 한양대학교"
+        placeholder="예) 세종대학교"
         error={errors.university?.message}
         {...register('university')}
       />
