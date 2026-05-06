@@ -127,8 +127,8 @@ export default function IdealPage() {
               className={cn(
                 'flex-1 py-2.5 rounded-xl border text-sm transition-all',
                 selected.has(option)
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -150,8 +150,8 @@ export default function IdealPage() {
               className={cn(
                 'py-2.5 rounded-xl border text-sm transition-all',
                 selected.has(option)
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -196,8 +196,8 @@ export default function IdealPage() {
               className={cn(
                 'py-2.5 rounded-xl border text-sm transition-all',
                 selected.has(option)
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -218,8 +218,8 @@ export default function IdealPage() {
               className={cn(
                 'flex-1 py-2.5 rounded-xl border text-sm transition-all',
                 values[key] === option
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -240,8 +240,8 @@ export default function IdealPage() {
               className={cn(
                 'flex-1 py-2.5 rounded-xl border text-sm transition-all',
                 values[key] === option
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -270,11 +270,11 @@ export default function IdealPage() {
         title="어떤 분이면 좋을까요?"
       />
 
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm text-amber-700 leading-relaxed">
+      <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-sm text-brand-mid leading-relaxed">
         한 번 등록한 이상형 조건은 수정할 수 없어요. 이 조건을 기준으로 상대방 특징과의 일치율을 계산해 매칭 상대를 보여드려요.
       </div>
 
-      <div className="bg-brand-rose-light/60 border border-brand-rose/20 rounded-2xl px-4 py-3 text-sm text-brand-mid leading-relaxed">
+      <div className="bg-brand-rose-light border border-brand-rose/15 rounded-2xl px-4 py-3 text-sm text-brand-mid leading-relaxed">
         비워두면 &apos;상관없음&apos;으로 처리해요. 완벽히 맞는 분이 없으면 1~2개만 맞아도 보여드려요.
       </div>
 
@@ -296,7 +296,7 @@ export default function IdealPage() {
 
       {showWaitingModal && (
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-5">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-5 shadow-modal">
             <div className="text-center">
               <div className="text-5xl mb-3">🌸</div>
               <p className="font-bold text-brand-dark text-lg">가입이 완료됐어요!</p>

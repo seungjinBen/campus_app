@@ -14,7 +14,7 @@ interface MatchCardProps {
 
 export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden animate-fadeIn">
+    <div className="bg-white rounded-2xl shadow-card border border-brand-sand overflow-hidden animate-fadeIn">
       {/* 사진 영역 */}
       <div className="relative w-full h-40">
         <Image

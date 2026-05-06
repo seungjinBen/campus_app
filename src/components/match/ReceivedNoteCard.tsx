@@ -32,7 +32,7 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden animate-fadeIn">
+    <div className="bg-white rounded-2xl shadow-card border border-brand-sand overflow-hidden animate-fadeIn">
       <div className="flex gap-4 p-4">
         <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
           <Image
@@ -61,7 +61,7 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
             </div>
           )}
 
-          <div className="flex items-start gap-1.5 mt-2.5 p-2.5 bg-[#FFF9F9] rounded-lg border border-[#FFE4E4]">
+          <div className="flex items-start gap-1.5 mt-2.5 p-2.5 bg-brand-rose-light rounded-lg border border-brand-rose/15">
             <MessageSquare className="h-3.5 w-3.5 text-brand-rose flex-shrink-0 mt-0.5" />
             <p className="text-sm text-brand-dark leading-relaxed">{item.noteContent}</p>
           </div>
@@ -90,7 +90,7 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
               <button
                 onClick={() => handleRespond('REJECTED')}
                 disabled={isLoading}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#F3F4F6] text-brand-mid text-sm font-medium transition-opacity disabled:opacity-60"
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-brand-warm text-brand-mid text-sm font-medium transition-opacity disabled:opacity-60"
               >
                 <X className="w-3.5 h-3.5" />
                 거절

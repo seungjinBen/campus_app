@@ -55,12 +55,12 @@ export default function ReceivedPage() {
   return (
     <div className="flex flex-col gap-3">
       {/* 탭 */}
-      <div className="flex rounded-xl bg-[#F3F4F6] p-1">
+      <div className="flex rounded-xl bg-brand-warm p-1">
         <button
           onClick={() => setTab('contacts')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
             tab === 'contacts'
-              ? 'bg-white text-brand-dark shadow-sm'
+              ? 'bg-white text-brand-dark shadow-card'
               : 'text-brand-light'
           }`}
         >
@@ -70,7 +70,7 @@ export default function ReceivedPage() {
           onClick={() => setTab('notes')}
           className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
             tab === 'notes'
-              ? 'bg-white text-brand-dark shadow-sm'
+              ? 'bg-white text-brand-dark shadow-card'
               : 'text-brand-light'
           }`}
         >

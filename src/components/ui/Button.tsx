@@ -10,8 +10,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles = {
-  primary: 'bg-brand-dark text-white hover:bg-opacity-90 disabled:bg-brand-light',
-  secondary: 'border border-brand-dark text-brand-dark hover:bg-brand-warm disabled:border-brand-sand disabled:text-brand-sand',
+  primary: 'bg-brand-rose text-white hover:opacity-90 disabled:bg-brand-light disabled:opacity-60',
+  secondary: 'border border-brand-sand text-brand-dark bg-white hover:bg-brand-warm disabled:border-brand-sand disabled:text-brand-light',
   ghost: 'text-brand-mid hover:text-brand-dark hover:bg-brand-warm',
   danger: 'bg-red-500 text-white hover:bg-red-600 disabled:bg-red-300',
 };

@@ -127,7 +127,7 @@ export default function MatchPage() {
           <button
             onClick={handleAdminReset}
             disabled={isResetting}
-            className="py-1.5 px-3 rounded-xl border border-amber-300 bg-amber-50 text-amber-700 text-xs font-medium disabled:opacity-50"
+            className="py-1.5 px-3 rounded-xl border border-brand-sand bg-brand-warm text-brand-mid text-xs font-medium disabled:opacity-50"
           >
             {isResetting ? '초기화 중...' : '🛠 카드 초기화'}
           </button>
@@ -227,7 +227,7 @@ export default function MatchPage() {
           onClick={() => setConfirmingId(null)}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4"
+            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
@@ -261,7 +261,7 @@ export default function MatchPage() {
           onClick={() => setSelectResult(null)}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4"
+            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
@@ -292,7 +292,7 @@ export default function MatchPage() {
           onClick={() => { setSelectResult(null); setNoteContent(''); }}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4"
+            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
@@ -306,7 +306,7 @@ export default function MatchPage() {
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value.slice(0, 50))}
                 placeholder="50자 이내로 마음을 전해보세요"
-                className="w-full h-24 px-4 py-3 text-sm border border-[#E5E7EB] rounded-xl resize-none focus:outline-none focus:border-brand-rose"
+                className="w-full h-24 px-4 py-3 text-sm border border-brand-sand rounded-xl resize-none focus:outline-none focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/20 bg-brand-warm text-brand-dark placeholder:text-brand-light"
               />
               <p className="text-right text-xs text-brand-light mt-1">{noteContent.length}/50</p>
             </div>

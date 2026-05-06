@@ -11,7 +11,7 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-cream">
-      <div className="sticky top-0 z-10 bg-brand-cream">
+      <div className="sticky top-0 z-10 bg-white border-b border-brand-sand/60 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
         <div className="flex items-center px-4 py-3 gap-3">
           <button
             onClick={() => router.back()}

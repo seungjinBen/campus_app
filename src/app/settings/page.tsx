@@ -95,7 +95,7 @@ export default function SettingsPage() {
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-brand-dark">프로필 사진</h2>
           <div
-            className="relative w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-brand-sand bg-brand-warm flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-brand-rose hover:bg-brand-rose-light/30"
+            className="relative w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-brand-sand bg-white flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-brand-rose hover:bg-brand-rose-light/40 shadow-card"
             onClick={() => !isUploading && fileInputRef.current?.click()}
             role="button"
             aria-label="사진 변경"
@@ -180,7 +180,7 @@ export default function SettingsPage() {
           onClick={() => !isDeleting && setShowDeleteConfirm(false)}
         >
           <div
-            className="bg-white rounded-t-2xl px-5 py-6 w-full max-w-lg flex flex-col gap-5"
+            className="bg-white rounded-t-2xl px-5 py-6 w-full max-w-lg flex flex-col gap-5 shadow-modal"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-1.5">

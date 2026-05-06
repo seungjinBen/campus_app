@@ -12,7 +12,7 @@ interface ReceivedContactCardProps {
 
 export default function ReceivedContactCard({ item }: ReceivedContactCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden animate-fadeIn">
+    <div className="bg-white rounded-2xl shadow-card border border-brand-sand overflow-hidden animate-fadeIn">
       <div className="flex gap-4 p-4">
         <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
           <Image

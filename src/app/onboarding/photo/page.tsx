@@ -92,7 +92,7 @@ export default function PhotoPage() {
 
       {/* 업로드 영역 */}
       <div
-        className="relative w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-brand-sand bg-brand-warm flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-brand-rose hover:bg-brand-rose-light/30"
+        className="relative w-full aspect-[3/4] rounded-2xl border-2 border-dashed border-brand-sand bg-white flex flex-col items-center justify-center cursor-pointer transition-colors hover:border-brand-rose hover:bg-brand-rose-light/40 shadow-card"
         onClick={() => !isUploading && fileInputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}

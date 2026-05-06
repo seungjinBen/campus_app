@@ -104,8 +104,8 @@ export default function ProfilePage() {
                   className={cn(
                     'flex-1 py-3 rounded-xl border text-sm font-medium transition-all',
                     selectedGender === g
-                      ? 'border-brand-rose bg-brand-rose-light text-brand-rose'
-                      : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                      ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                      : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
                   )}
                 >
                   {g === 'MALE' ? '남성' : '여성'}
@@ -148,8 +148,8 @@ export default function ProfilePage() {
                   className={cn(
                     'flex-1 py-3 rounded-xl border text-sm font-medium transition-all',
                     selectedContactType === type
-                      ? 'border-brand-rose bg-brand-rose-light text-brand-rose'
-                      : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                      ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                      : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
                   )}
                 >
                   {type === 'INSTAGRAM' ? '인스타그램' : '전화번호'}
@@ -168,7 +168,7 @@ export default function ProfilePage() {
         {...register('contactValue')}
       />
 
-      <div className="rounded-2xl bg-brand-rose-light px-4 py-4 flex flex-col gap-3">
+      <div className="rounded-2xl bg-brand-rose-light border border-brand-rose/15 px-4 py-4 flex flex-col gap-3">
         <p className="text-sm font-semibold text-brand-rose">💝 연락처 공개 원칙</p>
         <ul className="flex flex-col gap-2 text-sm text-brand-mid">
           {[

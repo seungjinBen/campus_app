@@ -87,7 +87,7 @@ export default function SplashPage() {
           사진 한 장, 하루{' '}
           <span className="relative inline-block">
             <span className="relative z-10">세 번</span>
-            <span className="absolute inset-x-0 bottom-0.5 h-[0.65em] bg-yellow-300/70 rounded-sm -z-0" />
+            <span className="absolute inset-x-0 bottom-0.5 h-[0.65em] bg-brand-rose/20 rounded-sm -z-0" />
           </span>
           의 설렘
           <br />
@@ -103,8 +103,8 @@ export default function SplashPage() {
       {/* FAQ 카드 목록 */}
       <div className="flex-1 px-5 space-y-3">
         {faqs.map((item, i) => (
-          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-warm">
-            <div className="flex items-start gap-3 px-4 py-3.5 border-b border-brand-warm">
+          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-card border border-brand-sand">
+            <div className="flex items-start gap-3 px-4 py-3.5 border-b border-brand-sand">
               <span className="flex-shrink-0 w-6 h-6 rounded-md bg-brand-dark flex items-center justify-center text-white text-[11px] font-bold">
                 Q
               </span>
@@ -120,13 +120,13 @@ export default function SplashPage() {
         ))}
 
         {/* 보안 배너 */}
-        <div className="bg-brand-dark rounded-2xl px-5 py-4 flex items-start gap-4 mt-1">
-          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-brand-rose/20 flex items-center justify-center mt-0.5">
+        <div className="bg-brand-rose-light border border-brand-rose/15 rounded-2xl px-5 py-4 flex items-start gap-4 mt-1">
+          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-brand-rose/10 flex items-center justify-center mt-0.5">
             <Lock className="w-4 h-4 text-brand-rose" />
           </div>
           <div>
-            <p className="text-brand-rose-light font-bold text-sm mb-1">연락처 무방비 유포 걱정 없어요</p>
-            <p className="text-brand-light text-xs leading-relaxed">
+            <p className="text-brand-rose font-bold text-sm mb-1">연락처 무방비 유포 걱정 없어요</p>
+            <p className="text-brand-mid text-xs leading-relaxed">
               이상형 일치율 70% 이상인 사람에게만 연락처가 제공돼요.<br />
               실제 테스트 결과, 70% 일치면 정말 잘 맞는 사람이에요.
             </p>
@@ -137,7 +137,7 @@ export default function SplashPage() {
       </div>{/* 스크롤 영역 끝 */}
 
       {/* 하단 CTA — 고정 */}
-      <div className="flex-shrink-0 px-6 pt-4 pb-8 flex flex-col items-center gap-3 bg-brand-cream border-t border-brand-warm">
+      <div className="flex-shrink-0 px-6 pt-4 pb-8 flex flex-col items-center gap-3 bg-white border-t border-brand-sand shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
         <label className="flex items-start gap-2.5 w-full max-w-xs cursor-pointer">
           <input
             type="checkbox"

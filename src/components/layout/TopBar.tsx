@@ -14,7 +14,7 @@ export default function TopBar({ title, showBack = false, right }: TopBarProps) 
   const router = useRouter();
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-brand-cream border-b border-brand-sand/40">
+    <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-brand-sand/60 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
       <div className="w-10">
         {showBack && (
           <button

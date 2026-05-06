@@ -130,8 +130,8 @@ export default function TraitsPage() {
               className={cn(
                 'py-2.5 rounded-xl border text-sm transition-all',
                 selected.has(option)
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -153,8 +153,8 @@ export default function TraitsPage() {
               className={cn(
                 'py-2.5 rounded-xl border text-sm transition-all',
                 selected.has(option)
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -175,8 +175,8 @@ export default function TraitsPage() {
               className={cn(
                 'flex-1 py-2.5 rounded-xl border text-sm transition-all',
                 entry.traitValue === option
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -197,8 +197,8 @@ export default function TraitsPage() {
               className={cn(
                 'flex-1 py-2.5 rounded-xl border text-sm transition-all',
                 entry.traitValue === option
-                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-medium'
-                  : 'border-brand-sand text-brand-mid hover:border-brand-mid'
+                  ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                  : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
               )}
             >
               {option}
@@ -214,7 +214,7 @@ export default function TraitsPage() {
         placeholder={TRAIT_PLACEHOLDERS[key]}
         value={entry.traitValue}
         onChange={(e) => updateValue(key, e.target.value)}
-        className="w-full rounded-xl border border-brand-sand bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-light outline-none transition-colors focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/20"
+        className="w-full rounded-xl border border-brand-sand bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-light outline-none transition-colors focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/15"
       />
     );
   };
@@ -228,7 +228,7 @@ export default function TraitsPage() {
         description="카드에 표시할 항목은 공개 토글을 켜두세요"
       />
 
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm text-amber-700 leading-relaxed">
+      <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-sm text-brand-mid leading-relaxed">
         한 번 등록한 특징은 수정할 수 없어요. 입력하신 정보는 상대방의 이상형 조건과 비교되어 매칭 점수를 계산하는 데 사용돼요.
       </div>
 
