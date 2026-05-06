@@ -24,7 +24,7 @@ import { ImagePlus, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 // ── 기본 정보 ──────────────────────────────────────────────────
 const initialBasic = {
@@ -171,7 +171,10 @@ export default function AdminAddUserPage() {
       .filter((k) => traits[k].value.trim() !== '')
       .map((k) => ({ traitKey: k, traitValue: traits[k].value.trim(), isVisible: traits[k].isVisible }));
 
-    if (!isBasicValid || !photoFile) return;
+    if (!isBasicValid || !photoFile) {
+      toast.error('기본 정보와 사진을 모두 입력해 주세요');
+      return;
+    }
 
     if (traitList.length === 0) {
       toast.error('특징을 1개 이상 입력해 주세요');
@@ -442,7 +445,7 @@ export default function AdminAddUserPage() {
       <section className="flex flex-col gap-3">
         <div>
           <h2 className="text-base font-semibold text-brand-dark">사진</h2>
-          <p className="text-xs text-brand-light mt-0.5">JPEG, PNG, WEBP · 최대 5MB · 필수</p>
+          <p className="text-xs text-brand-light mt-0.5">JPEG, PNG, WEBP · 최대 10MB · 필수</p>
         </div>
 
         <div

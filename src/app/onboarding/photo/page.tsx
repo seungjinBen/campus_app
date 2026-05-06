@@ -12,7 +12,7 @@ import { ImagePlus, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 export default function PhotoPage() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function PhotoPage() {
       return;
     }
     if (file.size > MAX_SIZE_BYTES) {
-      toast.error('5MB 이하 사진만 올릴 수 있어요');
+      toast.error('10MB 이하 사진만 올릴 수 있어요');
       return;
     }
 
@@ -133,7 +133,7 @@ export default function PhotoPage() {
             <ImagePlus className="h-10 w-10" />
             <div className="text-center">
               <p className="text-sm font-medium">사진을 끌어다 놓거나 클릭하세요</p>
-              <p className="text-xs mt-1">JPEG, PNG, WEBP · 최대 5MB</p>
+              <p className="text-xs mt-1">JPEG, PNG, WEBP · 최대 10MB</p>
             </div>
           </div>
         )}

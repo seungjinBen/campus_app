@@ -59,15 +59,8 @@ export default function SplashPage() {
       {/* 스크롤 영역 */}
       <div className="flex-1 overflow-y-auto">
 
-      {/* 로고 + 브랜드명 — 중앙 정렬, 상단 고정 */}
-      <div className="flex flex-col items-center pt-12 pb-4 px-6">
-        <CampusLogo size={96} />
-        <h1 className="mt-3 text-2xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
-        <p className="text-sm text-brand-mid mt-1">대학생의 단 한 장</p>
-      </div>
-
-      {/* 운영 대학 뱃지 */}
-      <div className="flex items-center justify-center gap-2 px-6 pb-6 flex-wrap">
+      {/* 운영 대학 뱃지 — 최상단 */}
+      <div className="flex items-center justify-center gap-2 px-6 pt-5 pb-3 flex-wrap">
         <span className="text-xs text-brand-mid">현재</span>
         <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-green-200 text-xs font-medium text-green-600 bg-green-50">
           <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
@@ -78,6 +71,13 @@ export default function SplashPage() {
           세종대학교
         </span>
         <span className="text-xs text-brand-mid">학생 대상 운영 중</span>
+      </div>
+
+      {/* 로고 + 브랜드명 */}
+      <div className="flex flex-col items-center pt-6 pb-4 px-6">
+        <CampusLogo size={96} />
+        <h1 className="mt-3 text-2xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
+        <p className="text-sm text-brand-mid mt-1">대학생의 단 한 장</p>
       </div>
 
       {/* 메인 카피 */}
@@ -100,7 +100,7 @@ export default function SplashPage() {
       <div className="mx-6 h-px bg-brand-sand mb-6" />
 
       {/* FAQ 카드 목록 */}
-      <div className="flex-1 px-5 space-y-3">
+      <div className="flex-1 px-5 space-y-3 pb-6">
         {faqs.map((item, i) => (
           <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-card border border-brand-sand">
             <div className="flex items-start gap-3 px-4 py-3.5 border-b border-brand-sand">
