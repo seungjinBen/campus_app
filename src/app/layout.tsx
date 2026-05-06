@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="bg-brand-cream antialiased min-h-screen">
+      <body className="bg-brand-cream antialiased min-h-screen" suppressHydrationWarning>
         <div className="mx-auto max-w-md min-h-screen relative">
           {children}
         </div>
@@ -26,8 +26,8 @@ export default function RootLayout({
           toastOptions={{
             duration: 3000,
             style: {
-              background: '#2A2320',
-              color: '#FAF8F3',
+              background: '#111827',
+              color: '#F8F8FA',
               fontSize: '14px',
               borderRadius: '12px',
               padding: '12px 16px',

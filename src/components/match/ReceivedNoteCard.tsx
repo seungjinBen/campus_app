@@ -6,6 +6,8 @@ import { ReceivedNote } from '@/lib/types/match.types';
 import { formatTraitBadge } from '@/lib/utils/traitLabel';
 import Badge from '@/components/ui/Badge';
 import { Check, Contact, MessageSquare, X } from 'lucide-react';
+
+const BADGE_COLORS = ['rose', 'blue', 'violet', 'emerald', 'amber'] as const;
 import { respondToNote } from '@/lib/api/match';
 import toast from 'react-hot-toast';
 
@@ -53,8 +55,8 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
 
           {item.visibleTraits.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
-              {item.visibleTraits.map(({ traitKey, traitValue }) => (
-                <Badge key={traitKey} variant="sand" className="text-xs">
+              {item.visibleTraits.map(({ traitKey, traitValue }, i) => (
+                <Badge key={traitKey} variant={BADGE_COLORS[i % BADGE_COLORS.length]} className="text-xs">
                   {formatTraitBadge(traitKey, traitValue)}
                 </Badge>
               ))}

@@ -6,6 +6,8 @@ import { formatTraitBadge } from '@/lib/utils/traitLabel';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 
+const BADGE_COLORS = ['rose', 'blue', 'violet', 'emerald', 'amber'] as const;
+
 interface MatchCardProps {
   card: MatchCardType;
   onSelect: (candidateId: string) => void;
@@ -32,8 +34,8 @@ export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProp
 
         {card.visibleTraits.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {card.visibleTraits.map(({ traitKey, traitValue }) => (
-              <Badge key={traitKey} variant="rose" className="text-xs">
+            {card.visibleTraits.map(({ traitKey, traitValue }, i) => (
+              <Badge key={traitKey} variant={BADGE_COLORS[i % BADGE_COLORS.length]} className="text-xs">
                 {formatTraitBadge(traitKey, traitValue)}
               </Badge>
             ))}

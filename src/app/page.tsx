@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import KakaoLoginButton from '@/components/auth/KakaoLoginButton';
+import { CampusLogo } from '@/components/CampusLogo';
 import { getProfileComplete } from '@/lib/api/user';
 import { Loader2, Lock } from 'lucide-react';
 
@@ -60,9 +61,7 @@ export default function SplashPage() {
 
       {/* 로고 + 브랜드명 — 중앙 정렬, 상단 고정 */}
       <div className="flex flex-col items-center pt-12 pb-4 px-6">
-        <div className="w-24 h-24">
-          <img src="/logo.svg" alt="캠퍼스한장 로고" className="w-full h-full" />
-        </div>
+        <CampusLogo size={96} />
         <h1 className="mt-3 text-2xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
         <p className="text-sm text-brand-mid mt-1">대학생의 단 한 장</p>
       </div>
