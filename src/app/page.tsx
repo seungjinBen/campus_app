@@ -86,7 +86,7 @@ export default function SplashPage() {
           사진 한 장, 하루{' '}
           <span className="relative inline-block">
             <span className="relative z-10">세 번</span>
-            <span className="absolute inset-x-0 bottom-0.5 h-[0.65em] bg-brand-rose/20 rounded-sm -z-0" />
+            <span className="absolute inset-x-0 bottom-0.5 h-[0.65em] bg-yellow-300/70 rounded-sm -z-0" />
           </span>
           의 설렘
           <br />
