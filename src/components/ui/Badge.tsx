@@ -9,12 +9,12 @@ interface BadgeProps {
 
 const variantStyles = {
   default:  'bg-brand-warm text-brand-mid',
-  rose:     'bg-brand-warm text-brand-rose',
+  rose:     'bg-[#F3F4F6] text-[#4B5563]',
   sand:     'bg-brand-warm text-brand-mid',
-  blue:     'bg-brand-warm text-brand-rose',
-  violet:   'bg-brand-warm text-brand-rose',
-  emerald:  'bg-brand-warm text-brand-rose',
-  amber:    'bg-brand-warm text-brand-rose',
+  blue:     'bg-[#F3F4F6] text-[#4B5563]',
+  violet:   'bg-[#F3F4F6] text-[#4B5563]',
+  emerald:  'bg-[#F3F4F6] text-[#4B5563]',
+  amber:    'bg-[#F3F4F6] text-[#4B5563]',
 };
 
 export default function Badge({ children, variant = 'default', className }: BadgeProps) {
