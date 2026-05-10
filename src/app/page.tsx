@@ -130,6 +130,17 @@ export default function SplashPage() {
             </p>
           </div>
         </div>
+
+        {/* 실시간 가입자 알림 */}
+        <div className="flex justify-center">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
+            <span className="text-xs text-green-600 font-semibold">현재 <span className="font-bold">10+</span>명 가입 중</span>
+          </div>
+        </div>
       </div>
 
       </div>{/* 스크롤 영역 끝 */}
@@ -149,9 +160,6 @@ export default function SplashPage() {
           </span>
         </label>
         <KakaoLoginButton disabled={!agreed} />
-        <p className="text-xs text-green-500 font-medium mt-1">
-          현재 <span className="font-bold">10+</span>명 가입 중
-        </p>
       </div>
     </main>
   );
