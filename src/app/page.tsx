@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import KakaoLoginButton from '@/components/auth/KakaoLoginButton';
 import { CampusLogo } from '@/components/CampusLogo';
 import { getProfileComplete } from '@/lib/api/user';
@@ -150,10 +149,9 @@ export default function SplashPage() {
           </span>
         </label>
         <KakaoLoginButton disabled={!agreed} />
-        {/* 개발용 — 실서비스 전 삭제 예정 */}
-        <Link href="/auth/local" className="text-xs text-brand-light underline underline-offset-2 mt-1">
-          개발자 로그인
-        </Link>
+        <p className="text-xs text-green-500 font-medium mt-1">
+          현재 <span className="font-bold">10+</span>명 가입 중
+        </p>
       </div>
     </main>
   );
