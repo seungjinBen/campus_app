@@ -145,9 +145,9 @@ export default function MatchPage() {
         <div className="flex flex-col items-center gap-6 py-16 text-center">
           <div className="text-6xl">🌸</div>
           <div>
-            <p className="text-xl font-bold text-brand-dark">5월 6일 자정부터 시작돼요</p>
+            <p className="text-xl font-bold text-brand-dark">5월 19일 자정부터 시작돼요</p>
             <p className="text-sm text-brand-mid mt-3 leading-relaxed">
-              매칭 서비스는 <span className="font-semibold text-brand-rose">2026년 5월 6일 00:00</span>에<br />
+              매칭 서비스는 <span className="font-semibold text-brand-rose">2026년 5월 19일 00:00</span>에<br />
               공식 오픈돼요. 조금만 기다려 주세요!
             </p>
           </div>

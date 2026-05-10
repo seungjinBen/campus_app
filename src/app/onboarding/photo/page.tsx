@@ -10,8 +10,8 @@ import StepIndicator from '@/components/onboarding/StepIndicator';
 import Button from '@/components/ui/Button';
 import { ImagePlus, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { detectActualFormat, normalizeToJpeg } from '@/lib/utils/imageConvert';
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 export default function PhotoPage() {
@@ -21,6 +21,7 @@ export default function PhotoPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadLabel, setUploadLabel] = useState('업로드 중...');
 
   useEffect(() => {
     // 이전 스텝 완료 여부 체크
@@ -32,12 +33,14 @@ export default function PhotoPage() {
   }, [profileDraft, router, setStep]);
 
   const handleFileSelect = async (file: File) => {
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error('사진 형식을 확인해 주세요 (JPEG, PNG, WEBP)');
-      return;
-    }
     if (file.size > MAX_SIZE_BYTES) {
       toast.error('10MB 이하 사진만 올릴 수 있어요');
+      return;
+    }
+
+    const format = await detectActualFormat(file);
+    if (!format) {
+      toast.error('사진 형식을 확인해 주세요 (JPEG, PNG, WEBP)');
       return;
     }
 
@@ -46,7 +49,19 @@ export default function PhotoPage() {
     setIsUploading(true);
 
     try {
-      const { photoUrl, thumbnailUrl } = await uploadPhoto(file);
+      let fileToUpload = file;
+      if (format === 'heic') {
+        setUploadLabel('아이폰 사진 변환 중...');
+        try {
+          fileToUpload = await normalizeToJpeg(file);
+        } catch {
+          toast.error('아이폰 사진 변환에 실패했어요. 사진 앱에서 JPEG로 내보낸 뒤 다시 시도해 주세요.');
+          setPreviewUrl(null);
+          return;
+        }
+      }
+      setUploadLabel('업로드 중...');
+      const { photoUrl, thumbnailUrl } = await uploadPhoto(fileToUpload);
       setUploadedPhotoUrl(photoUrl);
       setPhotoUploaded(true);
 
@@ -63,6 +78,7 @@ export default function PhotoPage() {
       setPreviewUrl(null);
     } finally {
       setIsUploading(false);
+      setUploadLabel('업로드 중...');
     }
   };
 
@@ -123,7 +139,7 @@ export default function PhotoPage() {
             {isUploading && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-2xl">
                 <div className="bg-white rounded-xl px-4 py-3 text-sm text-brand-dark font-medium">
-                  업로드 중...
+                  {uploadLabel}
                 </div>
               </div>
             )}
@@ -133,7 +149,7 @@ export default function PhotoPage() {
             <ImagePlus className="h-10 w-10" />
             <div className="text-center">
               <p className="text-sm font-medium">사진을 끌어다 놓거나 클릭하세요</p>
-              <p className="text-xs mt-1">JPEG, PNG, WEBP · 최대 10MB</p>
+              <p className="text-xs mt-1">JPEG, PNG, WEBP, HEIC · 최대 10MB</p>
             </div>
           </div>
         )}
@@ -142,7 +158,7 @@ export default function PhotoPage() {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/*"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];

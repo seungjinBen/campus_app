@@ -12,8 +12,8 @@ import { deleteAccount } from '@/lib/api/auth';
 import { handleApiError } from '@/lib/api/handleApiError';
 import { ImagePlus, RefreshCw, LogOut, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { detectActualFormat, normalizeToJpeg } from '@/lib/utils/imageConvert';
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 export default function SettingsPage() {
@@ -25,6 +25,7 @@ export default function SettingsPage() {
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadLabel, setUploadLabel] = useState('업로드 중...');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -37,12 +38,14 @@ export default function SettingsPage() {
   const displayUrl = previewUrl ?? currentPhotoUrl;
 
   const handleFileSelect = async (file: File) => {
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error('사진 형식을 확인해 주세요 (JPEG, PNG, WEBP)');
-      return;
-    }
     if (file.size > MAX_SIZE_BYTES) {
       toast.error('10MB 이하 사진만 올릴 수 있어요');
+      return;
+    }
+
+    const format = await detectActualFormat(file);
+    if (!format) {
+      toast.error('사진 형식을 확인해 주세요 (JPEG, PNG, WEBP)');
       return;
     }
 
@@ -51,7 +54,19 @@ export default function SettingsPage() {
     setIsUploading(true);
 
     try {
-      const { photoUrl, thumbnailUrl } = await uploadPhoto(file);
+      let fileToUpload = file;
+      if (format === 'heic') {
+        setUploadLabel('아이폰 사진 변환 중...');
+        try {
+          fileToUpload = await normalizeToJpeg(file);
+        } catch {
+          toast.error('아이폰 사진 변환에 실패했어요. 사진 앱에서 JPEG로 내보낸 뒤 다시 시도해 주세요.');
+          setPreviewUrl(null);
+          return;
+        }
+      }
+      setUploadLabel('업로드 중...');
+      const { photoUrl, thumbnailUrl } = await uploadPhoto(fileToUpload);
       setCurrentPhotoUrl(photoUrl);
       setPreviewUrl(null);
       toast.success('사진이 변경됐어요');
@@ -67,6 +82,7 @@ export default function SettingsPage() {
       setPreviewUrl(null);
     } finally {
       setIsUploading(false);
+      setUploadLabel('업로드 중...');
     }
   };
 
@@ -124,7 +140,7 @@ export default function SettingsPage() {
                 {isUploading && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-2xl">
                     <div className="bg-white rounded-xl px-4 py-3 text-sm text-brand-dark font-medium">
-                      업로드 중...
+                      {uploadLabel}
                     </div>
                   </div>
                 )}
@@ -142,7 +158,7 @@ export default function SettingsPage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/*"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];

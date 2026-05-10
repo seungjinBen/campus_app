@@ -35,7 +35,7 @@ export default function IdealPage() {
   const isNavigatingAway = useRef(false);
 
   // 매칭 서비스 오픈 일시
-  const MATCHING_START = new Date('2026-05-06T00:00:00');
+  const MATCHING_START = new Date('2026-05-19T00:00:00');
 
   useEffect(() => {
     if (!traitsDraft && !isNavigatingAway.current) {
@@ -302,7 +302,7 @@ export default function IdealPage() {
               <p className="font-bold text-brand-dark text-lg">가입이 완료됐어요!</p>
               <p className="text-sm text-brand-mid mt-3 leading-relaxed">
                 매칭 서비스는{' '}
-                <span className="font-semibold text-brand-rose">5월 6일 자정</span>
+                <span className="font-semibold text-brand-rose">5월 19일 자정</span>
                 부터 시작돼요.<br />
                 오픈까지 조금만 기다려 주세요!
               </p>
