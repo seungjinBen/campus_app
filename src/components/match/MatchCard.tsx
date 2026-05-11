@@ -3,10 +3,7 @@
 import Image from 'next/image';
 import { MatchCard as MatchCardType } from '@/lib/types/match.types';
 import { formatTraitBadge } from '@/lib/utils/traitLabel';
-import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-
-const BADGE_COLORS = ['rose', 'blue', 'violet', 'emerald', 'amber'] as const;
 
 interface MatchCardProps {
   card: MatchCardType;
@@ -15,10 +12,21 @@ interface MatchCardProps {
 }
 
 export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProps) {
+  const heightTrait = card.visibleTraits.find(t => t.traitKey === 'HEIGHT');
+  const mbtiTrait = card.visibleTraits.find(t => t.traitKey === 'MBTI');
+  const badgeTraits = card.visibleTraits.filter(
+    t => t.traitKey !== 'HEIGHT' && t.traitKey !== 'MBTI'
+  );
+
+  const headerInfo = [
+    heightTrait && `키 ${heightTrait.traitValue}`,
+    mbtiTrait?.traitValue,
+  ].filter(Boolean).join(' · ');
+
   return (
-    <div className="bg-white rounded-2xl shadow-card border border-brand-sand overflow-hidden animate-fadeIn">
-      {/* 사진 영역 */}
-      <div className="relative w-full h-40">
+    <div className="relative rounded-2xl overflow-hidden shadow-card border border-brand-sand animate-fadeIn">
+      {/* 사진 — 전체 */}
+      <div className="relative w-full aspect-[3/4]">
         <Image
           src={card.photoUrl}
           alt={`${card.nickname}의 프로필 사진`}
@@ -28,19 +36,28 @@ export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProp
         />
       </div>
 
-      {/* 정보 영역 */}
-      <div className="px-3 py-3 flex flex-col gap-2">
-        <h3 className="font-semibold text-brand-dark text-sm truncate">{card.nickname}</h3>
-
-        {card.visibleTraits.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {card.visibleTraits.map(({ traitKey, traitValue }, i) => (
-              <Badge key={traitKey} variant={BADGE_COLORS[i % BADGE_COLORS.length]} className="text-xs">
-                {formatTraitBadge(traitKey, traitValue)}
-              </Badge>
-            ))}
+      {/* 하단 정보 + 버튼 오버레이 */}
+      <div className="absolute bottom-0 inset-x-0 bg-brand-cream/95 backdrop-blur-sm rounded-b-2xl px-3 pt-2.5 pb-3 flex flex-col gap-2">
+        <div>
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <h3 className="font-bold text-brand-dark text-sm leading-tight">{card.nickname}</h3>
+            {headerInfo && (
+              <span className="text-xs text-brand-mid">{headerInfo}</span>
+            )}
           </div>
-        )}
+          {badgeTraits.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1.5">
+              {badgeTraits.slice(0, 4).map(({ traitKey, traitValue }) => (
+                <span
+                  key={traitKey}
+                  className="text-[10px] px-2 py-0.5 rounded-full bg-white border border-brand-sand text-brand-mid font-medium"
+                >
+                  {formatTraitBadge(traitKey, traitValue)}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
         <Button
           size="sm"
