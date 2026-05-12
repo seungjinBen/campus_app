@@ -26,7 +26,7 @@ export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProp
   return (
     <div className="relative rounded-2xl overflow-hidden shadow-card border border-brand-sand animate-fadeIn">
       {/* 사진 — 전체 */}
-      <div className="relative w-full aspect-[3/4]">
+      <div className="relative w-full aspect-[2/3]">
         <Image
           src={card.photoUrl}
           alt={`${card.nickname}의 프로필 사진`}
