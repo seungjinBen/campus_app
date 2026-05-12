@@ -10,7 +10,8 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { SelectResult } from '@/lib/types/match.types';
 import MatchCardList from '@/components/match/MatchCardList';
 import Button from '@/components/ui/Button';
-import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { Loader2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function MatchPage() {
@@ -24,6 +25,8 @@ export default function MatchPage() {
 
   // 선택 결과 모달
   const [selectResult, setSelectResult] = useState<SelectResult | null>(null);
+  const [selectedCardPhoto, setSelectedCardPhoto] = useState<string | null>(null);
+  const [photoFullscreen, setPhotoFullscreen] = useState(false);
   // 쪽지 작성 모달
   const [noteContent, setNoteContent] = useState('');
   const [isSendingNote, setIsSendingNote] = useState(false);
@@ -38,6 +41,10 @@ export default function MatchPage() {
 
   const handleSelectRequest = (candidateId: string) => {
     setConfirmingId(candidateId);
+    if (state.type === 'cards') {
+      const card = state.cards.find(c => c.candidateId === candidateId);
+      setSelectedCardPhoto(card?.photoUrl ?? null);
+    }
   };
 
   const handleSelectConfirm = useCallback(async () => {
@@ -261,26 +268,43 @@ export default function MatchPage() {
           onClick={() => setSelectResult(null)}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
+            className="bg-white rounded-3xl w-full max-w-md flex flex-col shadow-modal overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-center">
-              <div className="text-4xl mb-2">💘</div>
-              <p className="font-bold text-brand-dark text-lg whitespace-pre-line">
-                {selectResult.message.replace(/\s*💘\s*/g, '\n')}
-              </p>
-              {selectResult.contactValue && (
-                <div className="mt-4 p-3 bg-brand-cream rounded-xl">
-                  <p className="text-xs text-brand-mid mb-1">
-                    {selectResult.contactType === 'INSTAGRAM' ? '인스타그램' : '카카오톡'}
-                  </p>
-                  <p className="font-semibold text-brand-dark text-base">{selectResult.contactValue}</p>
-                </div>
-              )}
+            {/* 사진 */}
+            {selectedCardPhoto && (
+              <div
+                className="relative w-full aspect-[4/3] cursor-zoom-in"
+                onClick={() => setPhotoFullscreen(true)}
+              >
+                <Image
+                  src={selectedCardPhoto}
+                  alt="프로필 사진"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 448px) 100vw, 448px"
+                />
+              </div>
+            )}
+            <div className="p-6 flex flex-col gap-4">
+              <div className="text-center">
+                <div className="text-4xl mb-2">💘</div>
+                <p className="font-bold text-brand-dark text-lg whitespace-pre-line">
+                  {selectResult.message.replace(/\s*💘\s*/g, '\n')}
+                </p>
+                {selectResult.contactValue && (
+                  <div className="mt-4 p-3 bg-brand-cream rounded-xl">
+                    <p className="text-xs text-brand-mid mb-1">
+                      {selectResult.contactType === 'INSTAGRAM' ? '인스타그램' : '카카오톡'}
+                    </p>
+                    <p className="font-semibold text-brand-dark text-base">{selectResult.contactValue}</p>
+                  </div>
+                )}
+              </div>
+              <Button variant="primary" size="lg" fullWidth onClick={() => setSelectResult(null)}>
+                확인했어요
+              </Button>
             </div>
-            <Button variant="primary" size="lg" fullWidth onClick={() => setSelectResult(null)}>
-              확인했어요
-            </Button>
           </div>
         </div>
       )}
@@ -292,44 +316,85 @@ export default function MatchPage() {
           onClick={() => { setSelectResult(null); setNoteContent(''); }}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
+            className="bg-white rounded-3xl w-full max-w-md flex flex-col shadow-modal overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-center">
-              <div className="text-4xl mb-2">💌</div>
-              <p className="font-bold text-brand-dark text-base">
-                {selectResult.message.replace(/\s*💌\s*/g, '')}
-              </p>
-            </div>
-            <div>
-              <textarea
-                value={noteContent}
-                onChange={(e) => setNoteContent(e.target.value.slice(0, 50))}
-                placeholder="50자 이내로 마음을 전해보세요"
-                className="w-full h-24 px-4 py-3 text-sm border border-brand-sand rounded-xl resize-none focus:outline-none focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/20 bg-brand-warm text-brand-dark placeholder:text-brand-light"
-              />
-              <p className="text-right text-xs text-brand-light mt-1">{noteContent.length}/50</p>
-            </div>
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                size="lg"
-                fullWidth
-                onClick={() => { setSelectResult(null); setNoteContent(''); }}
+            {/* 사진 */}
+            {selectedCardPhoto && (
+              <div
+                className="relative w-full aspect-[4/3] cursor-zoom-in"
+                onClick={() => setPhotoFullscreen(true)}
               >
-                나중에
-              </Button>
-              <Button
-                variant="primary"
-                size="lg"
-                fullWidth
-                onClick={handleSendNote}
-                isLoading={isSendingNote}
-                disabled={!noteContent.trim()}
-              >
-                보내기
-              </Button>
+                <Image
+                  src={selectedCardPhoto}
+                  alt="프로필 사진"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 448px) 100vw, 448px"
+                />
+              </div>
+            )}
+            <div className="p-6 flex flex-col gap-4">
+              <div className="text-center">
+                <div className="text-4xl mb-2">💌</div>
+                <p className="font-bold text-brand-dark text-base">
+                  {selectResult.message.replace(/\s*💌\s*/g, '')}
+                </p>
+              </div>
+              <div>
+                <textarea
+                  value={noteContent}
+                  onChange={(e) => setNoteContent(e.target.value.slice(0, 50))}
+                  placeholder="50자 이내로 마음을 전해보세요"
+                  className="w-full h-24 px-4 py-3 text-sm border border-brand-sand rounded-xl resize-none focus:outline-none focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/20 bg-brand-warm text-brand-dark placeholder:text-brand-light"
+                />
+                <p className="text-right text-xs text-brand-light mt-1">{noteContent.length}/50</p>
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  fullWidth
+                  onClick={() => { setSelectResult(null); setNoteContent(''); }}
+                >
+                  나중에
+                </Button>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  onClick={handleSendNote}
+                  isLoading={isSendingNote}
+                  disabled={!noteContent.trim()}
+                >
+                  보내기
+                </Button>
+              </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 사진 전체화면 라이트박스 */}
+      {photoFullscreen && selectedCardPhoto && (
+        <div
+          className="fixed inset-0 bg-black z-[60] flex items-center justify-center"
+          onClick={() => setPhotoFullscreen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white/80 hover:text-white z-10"
+            onClick={() => setPhotoFullscreen(false)}
+          >
+            <X className="w-7 h-7" />
+          </button>
+          <div className="relative w-full h-full">
+            <Image
+              src={selectedCardPhoto}
+              alt="프로필 사진"
+              fill
+              className="object-contain"
+              sizes="100vw"
+            />
           </div>
         </div>
       )}
