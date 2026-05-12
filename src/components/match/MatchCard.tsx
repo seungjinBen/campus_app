@@ -3,54 +3,58 @@
 import Image from 'next/image';
 import { MatchCard as MatchCardType } from '@/lib/types/match.types';
 import { formatTraitBadge } from '@/lib/utils/traitLabel';
-import Button from '@/components/ui/Button';
 
 interface MatchCardProps {
   card: MatchCardType;
+  index: number;
   onSelect: (candidateId: string) => void;
   isSelecting: boolean;
 }
 
-export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProps) {
+export default function MatchCard({ card, index, onSelect, isSelecting }: MatchCardProps) {
   const heightTrait = card.visibleTraits.find(t => t.traitKey === 'HEIGHT');
   const mbtiTrait = card.visibleTraits.find(t => t.traitKey === 'MBTI');
   const badgeTraits = card.visibleTraits.filter(
     t => t.traitKey !== 'HEIGHT' && t.traitKey !== 'MBTI'
   );
 
-  const headerInfo = [
+  const infoLine = [
     heightTrait && `키 ${heightTrait.traitValue}`,
     mbtiTrait?.traitValue,
   ].filter(Boolean).join(' · ');
 
+  const cardNo = `NO. ${String(index).padStart(2, '0')}`;
+  const header = card.university ? `${cardNo} · ${card.university}` : cardNo;
+
   return (
-    <div className="relative rounded-2xl overflow-hidden shadow-card border border-brand-sand animate-fadeIn">
-      {/* 사진 — 전체 */}
-      <div className="relative w-full aspect-[9/16]">
+    <div className="flex flex-col gap-3 animate-fadeIn">
+      {/* NO. XX · 대학교 */}
+      <p className="text-xs font-semibold text-brand-mid tracking-wide px-1">{header}</p>
+
+      {/* 사진 */}
+      <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-card">
         <Image
           src={card.photoUrl}
           alt={`${card.nickname}의 프로필 사진`}
           fill
           className="object-cover"
-          sizes="(max-width: 448px) 50vw, 224px"
+          sizes="(max-width: 448px) 100vw, 448px"
         />
       </div>
 
-      {/* 하단 정보 + 버튼 오버레이 */}
-      <div className="absolute bottom-0 inset-x-0 bg-brand-cream/95 backdrop-blur-sm rounded-b-2xl px-3 pt-2.5 pb-3 flex flex-col gap-2">
-        <div>
-          <div className="flex items-baseline gap-1.5 flex-wrap">
-            <h3 className="font-bold text-brand-dark text-sm leading-tight">{card.nickname}</h3>
-            {headerInfo && (
-              <span className="text-xs text-brand-mid">{headerInfo}</span>
-            )}
-          </div>
+      {/* 정보 + 선택 버튼 */}
+      <div className="flex items-end justify-between px-1 gap-4">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <h3 className="font-bold text-brand-dark text-xl leading-tight">{card.nickname}</h3>
+          {infoLine && (
+            <p className="text-sm text-brand-mid">{infoLine}</p>
+          )}
           {badgeTraits.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1.5">
-              {badgeTraits.slice(0, 4).map(({ traitKey, traitValue }) => (
+            <div className="flex flex-wrap gap-1.5">
+              {badgeTraits.map(({ traitKey, traitValue }) => (
                 <span
                   key={traitKey}
-                  className="text-[10px] px-2 py-0.5 rounded-full bg-white border border-brand-sand text-brand-mid font-medium"
+                  className="text-xs px-2.5 py-1 rounded-full bg-white border border-brand-sand text-brand-mid font-medium"
                 >
                   {formatTraitBadge(traitKey, traitValue)}
                 </span>
@@ -59,14 +63,13 @@ export default function MatchCard({ card, onSelect, isSelecting }: MatchCardProp
           )}
         </div>
 
-        <Button
-          size="sm"
-          fullWidth
+        <button
           onClick={() => onSelect(card.candidateId)}
-          isLoading={isSelecting}
+          disabled={isSelecting}
+          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-dark text-white text-sm font-semibold disabled:opacity-50 active:scale-95 transition-all"
         >
-          선택하기
-        </Button>
+          {isSelecting ? '선택 중' : '선택 →'}
+        </button>
       </div>
     </div>
   );

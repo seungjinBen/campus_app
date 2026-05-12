@@ -6,6 +6,7 @@ export interface MatchCard {
   photoUrl: string;
   visibleTraits: { traitKey: TraitKey; traitValue: string }[];
   matchScore: number;
+  university?: string;
 }
 
 export interface DailyCardsResponse {

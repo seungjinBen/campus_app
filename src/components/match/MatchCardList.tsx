@@ -11,11 +11,12 @@ interface MatchCardListProps {
 
 export default function MatchCardList({ cards, onSelect, selectingId }: MatchCardListProps) {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {cards.map((card) => (
+    <div className="flex flex-col gap-8">
+      {cards.map((card, index) => (
         <MatchCard
           key={card.candidateId}
           card={card}
+          index={index + 1}
           onSelect={onSelect}
           isSelecting={selectingId === card.candidateId}
         />
