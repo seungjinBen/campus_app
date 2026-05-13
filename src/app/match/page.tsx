@@ -24,6 +24,7 @@ export default function MatchPage() {
 
   // 선택 결과 모달
   const [selectResult, setSelectResult] = useState<SelectResult | null>(null);
+  const [confirmingNickname, setConfirmingNickname] = useState<string | null>(null);
   // 쪽지 작성 모달
   const [noteContent, setNoteContent] = useState('');
   const [isSendingNote, setIsSendingNote] = useState(false);
@@ -38,6 +39,10 @@ export default function MatchPage() {
 
   const handleSelectRequest = (candidateId: string) => {
     setConfirmingId(candidateId);
+    if (state.type === 'cards') {
+      const card = state.cards.find(c => c.candidateId === candidateId);
+      setConfirmingNickname(card?.nickname ?? null);
+    }
   };
 
   const handleSelectConfirm = useCallback(async () => {
@@ -231,7 +236,9 @@ export default function MatchPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <p className="font-semibold text-brand-dark text-base">이분을 선택하시겠어요?</p>
+              <p className="font-semibold text-brand-dark text-base">
+                {confirmingNickname ? `'${confirmingNickname}'님을 선택하시겠어요?` : '이분을 선택하시겠어요?'}
+              </p>
               <p className="text-sm text-brand-mid mt-2 leading-relaxed">
                 이상형 일치율에 따라 연락처가 바로 공개되거나<br />쪽지를 보낼 수 있어요.
               </p>
