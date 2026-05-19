@@ -27,11 +27,6 @@ export function useMatchCards() {
 
       const { cards, remainingSelectCount } = await getMatchCards();
 
-      if (remainingSelectCount === 0) {
-        setState({ type: 'limit_reached' });
-        return;
-      }
-
       if (cards.length === 0) {
         setState({ type: 'empty' });
         return;

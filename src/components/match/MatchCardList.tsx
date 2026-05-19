@@ -7,9 +7,10 @@ interface MatchCardListProps {
   cards: MatchCardType[];
   onSelect: (candidateId: string) => void;
   selectingId: string | null;
+  selectionDisabled?: boolean;
 }
 
-export default function MatchCardList({ cards, onSelect, selectingId }: MatchCardListProps) {
+export default function MatchCardList({ cards, onSelect, selectingId, selectionDisabled }: MatchCardListProps) {
   return (
     <div className="flex flex-col gap-8">
       {cards.map((card, index) => (
@@ -19,6 +20,7 @@ export default function MatchCardList({ cards, onSelect, selectingId }: MatchCar
           index={index + 1}
           onSelect={onSelect}
           isSelecting={selectingId === card.candidateId}
+          selectionDisabled={selectionDisabled}
         />
       ))}
     </div>

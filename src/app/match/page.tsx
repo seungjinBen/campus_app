@@ -57,12 +57,8 @@ export default function MatchPage() {
       if (result.type === 'CONTACT_REVEALED') {
         // 선택 후 남은 횟수 반영
         if (state.type === 'cards') {
-          const newRemaining = state.remainingSelectCount - 1;
-          if (newRemaining <= 0) {
-            setState({ type: 'limit_reached' });
-          } else {
-            setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
-          }
+          const newRemaining = Math.max(0, state.remainingSelectCount - 1);
+          setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
         }
       }
     } catch (err) {
@@ -86,12 +82,8 @@ export default function MatchPage() {
       setNoteContent('');
       // 선택 후 남은 횟수 반영
       if (state.type === 'cards') {
-        const newRemaining = state.remainingSelectCount - 1;
-        if (newRemaining <= 0) {
-          setState({ type: 'limit_reached' });
-        } else {
-          setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
-        }
+        const newRemaining = Math.max(0, state.remainingSelectCount - 1);
+        setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
       }
     } catch (err) {
       toast.error(handleApiError(err));
@@ -208,10 +200,18 @@ export default function MatchPage() {
             </p>
           </div>
 
+          {state.remainingSelectCount === 0 && (
+            <div className="flex items-center gap-2 px-3 py-2.5 bg-brand-cream rounded-xl text-sm text-brand-mid">
+              <span>🌙</span>
+              <p>오늘 선택을 모두 사용했어요. 내일 자정에 초기화돼요.</p>
+            </div>
+          )}
+
           <MatchCardList
             cards={state.cards}
             onSelect={handleSelectRequest}
             selectingId={selectingId}
+            selectionDisabled={state.remainingSelectCount === 0}
           />
         </>
       )}

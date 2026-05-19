@@ -9,9 +9,10 @@ interface MatchCardProps {
   index: number;
   onSelect: (candidateId: string) => void;
   isSelecting: boolean;
+  selectionDisabled?: boolean;
 }
 
-export default function MatchCard({ card, index, onSelect, isSelecting }: MatchCardProps) {
+export default function MatchCard({ card, index, onSelect, isSelecting, selectionDisabled }: MatchCardProps) {
   const heightTrait = card.visibleTraits.find(t => t.traitKey === 'HEIGHT');
   const mbtiTrait = card.visibleTraits.find(t => t.traitKey === 'MBTI');
   const badgeTraits = card.visibleTraits.filter(
@@ -65,7 +66,7 @@ export default function MatchCard({ card, index, onSelect, isSelecting }: MatchC
 
         <button
           onClick={() => onSelect(card.candidateId)}
-          disabled={isSelecting}
+          disabled={isSelecting || !!selectionDisabled}
           className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-dark text-white text-sm font-semibold disabled:opacity-50 active:scale-95 transition-all"
         >
           {isSelecting ? '선택 중' : '선택 →'}
