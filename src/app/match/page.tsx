@@ -211,7 +211,6 @@ export default function MatchPage() {
             cards={state.cards}
             onSelect={handleSelectRequest}
             selectingId={selectingId}
-            selectionDisabled={state.remainingSelectCount === 0}
           />
         </>
       )}
