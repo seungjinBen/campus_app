@@ -20,7 +20,7 @@ export default function MatchCardList({ cards, onSelect, selectingId, selectionD
           index={index + 1}
           onSelect={onSelect}
           isSelecting={selectingId === card.candidateId}
-          selectionDisabled={selectionDisabled}
+          selectionDisabled={selectionDisabled ?? false}
         />
       ))}
     </div>
