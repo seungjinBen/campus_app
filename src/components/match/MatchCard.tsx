@@ -45,7 +45,12 @@ export default function MatchCard({ card, index, onSelect, isSelecting }: MatchC
       {/* 정보 + 선택 버튼 */}
       <div className="flex items-end justify-between px-1 gap-4">
         <div className="flex flex-col gap-1.5 min-w-0">
-          <h3 className="font-bold text-brand-dark text-xl leading-tight">{card.nickname}</h3>
+          <div className="flex items-baseline gap-1.5">
+            <h3 className="font-bold text-brand-dark text-xl leading-tight">{card.nickname}</h3>
+            {card.birthYear && (
+              <span className="text-sm font-medium text-brand-mid">{card.birthYear}</span>
+            )}
+          </div>
           {infoLine && (
             <p className="text-sm text-brand-mid">{infoLine}</p>
           )}

@@ -3,6 +3,7 @@ import { TraitKey } from './api.types';
 export interface MatchCard {
   candidateId: string;
   nickname: string;
+  birthYear?: string;
   photoUrl: string;
   visibleTraits: { traitKey: TraitKey; traitValue: string }[];
   matchScore: number;
