@@ -11,6 +11,7 @@ export type MatchPageState =
   | { type: 'empty' }
   | { type: 'limit_reached' }
   | { type: 'waiting' }
+  | { type: 'terminated' }
   | { type: 'error'; message: string };
 
 export function useMatchCards() {
@@ -36,7 +37,9 @@ export function useMatchCards() {
     } catch (err: unknown) {
       const code = getApiErrorCode(err);
 
-      if (code === 'MATCHING_NOT_AVAILABLE') {
+      if (code === 'MATCHING_TERMINATED') {
+        setState({ type: 'terminated' });
+      } else if (code === 'MATCHING_NOT_AVAILABLE') {
         setState({ type: 'waiting' });
       } else if (code === 'DAILY_SELECT_LIMIT_EXCEEDED') {
         setState({ type: 'limit_reached' });

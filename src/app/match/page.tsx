@@ -138,6 +138,50 @@ export default function MatchPage() {
         </div>
       )}
 
+      {state.type === 'terminated' && (
+        <div className="flex flex-col gap-5 py-8 px-1">
+          <div className="text-center">
+            <p className="text-2xl font-bold text-brand-dark leading-snug">
+              캠퍼스한장 매칭 서비스가<br />종료되었습니다.
+            </p>
+          </div>
+
+          <div className="bg-brand-cream rounded-2xl p-5 text-sm text-brand-mid leading-relaxed flex flex-col gap-4">
+            <p>
+              5월 19일부터 22일까지, 짧은 운영 기간이었지만 220명이 넘는 분들이 함께해 주셨습니다.
+            </p>
+            <p>
+              매칭 시스템이 시작되기도 전, 아무것도 없는 상태에서 저를 믿고 먼저 가입해주신 초기 유저분들께 특히 감사드립니다. 그 믿음이 없었다면 이 서비스는 시작조차 못했을 거예요.
+            </p>
+            <p>
+              캠퍼스한장은 축제 매칭부스의 무작위 번호 교환이 아닌, 조금 더 자신의 이상형에 부합하는 상대를 찾을 수 있으면 좋겠다는 생각에서 시작되었습니다. 그 작은 아이디어가 220명이 넘는 분들께 닿을 수 있었다는 것, 운영자로서 정말 만족스럽고 감사한 경험이었습니다.
+            </p>
+
+            <div className="border-t border-brand-sand pt-4 flex flex-col gap-2">
+              <p className="font-semibold text-brand-dark">📬 쪽지함은 5월 29일까지 유지됩니다.</p>
+              <p>
+                다른 분들이 보내주신 쪽지를 아직 확인하지 못하셨다면, 마지막으로 꼭 확인해보세요.<br />
+                캠퍼스한장을 통해 소중한 인연이 만들어졌길 진심으로 바랍니다 🍀
+              </p>
+            </div>
+
+            <div className="border-t border-brand-sand pt-4">
+              <p>
+                서비스를 이용하시며 느끼신 점이나 개선 의견이 있으시다면<br />
+                캠퍼스한장 계정으로 쪽지 주세요.<br />
+                소중한 의견을 모아 더 좋은 모습으로 돌아오겠습니다.
+              </p>
+            </div>
+
+            <p className="text-center font-medium text-brand-dark">감사합니다.</p>
+          </div>
+
+          <Link href="/match/received">
+            <Button variant="primary" size="lg" fullWidth>수신함 확인하기</Button>
+          </Link>
+        </div>
+      )}
+
       {state.type === 'waiting' && (
         <div className="flex flex-col items-center gap-6 py-16 text-center">
           <div className="text-6xl">🌸</div>
