@@ -117,14 +117,17 @@ export default function MatchPage() {
   return (
     <div className="flex flex-col gap-4">
       {mounted && isAdmin && (
-        <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
           <Link href="/admin/add-user">
-            <Button variant="secondary" size="sm">사람 추가하기</Button>
+            <Button variant="secondary" size="sm">사람 추가</Button>
+          </Link>
+          <Link href="/admin/verification">
+            <Button variant="secondary" size="sm">인증 검수</Button>
           </Link>
           <button
             onClick={handleAdminReset}
             disabled={isResetting}
-            className="py-1.5 px-3 rounded-xl border border-brand-sand bg-brand-warm text-brand-mid text-xs font-medium disabled:opacity-50"
+            className="ml-auto py-1.5 px-3 rounded-xl border border-brand-sand bg-brand-warm text-brand-mid text-xs font-medium disabled:opacity-50"
           >
             {isResetting ? '초기화 중...' : '🛠 카드 초기화'}
           </button>

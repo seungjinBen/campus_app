@@ -42,7 +42,7 @@ export default function IdealPage() {
       router.replace('/onboarding/traits');
       return;
     }
-    setStep(4);
+    setStep(5);
   }, [traitsDraft, router, setStep]);
 
   const updateValue = (key: TraitKey, value: string) => {
@@ -265,8 +265,8 @@ export default function IdealPage() {
   return (
     <div className="flex flex-col gap-6 pb-10">
       <StepIndicator
-        current={4}
-        total={4}
+        current={5}
+        total={5}
         title="어떤 분이면 좋을까요?"
       />
 

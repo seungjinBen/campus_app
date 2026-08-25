@@ -1,5 +1,7 @@
 import { TraitKey, Gender, ContactType } from './api.types';
 
+export type DeptFilterMode = 'ALL' | 'SAME_ONLY' | 'EXCLUDE_SAME';
+
 export interface UserProfile {
   id: string;
   nickname: string;
@@ -8,6 +10,8 @@ export interface UserProfile {
   university: string | null;
   contactType: ContactType;
   contactValue: string;
+  verifiedDepartment: string | null;
+  deptFilterMode: DeptFilterMode;
 }
 
 export interface UserTrait {

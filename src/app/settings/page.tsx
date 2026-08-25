@@ -8,13 +8,22 @@ import Button from '@/components/ui/Button';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useAuthStore } from '@/lib/store/authStore';
 import { uploadPhoto, updateThumbnail, getMyPhotoUrl } from '@/lib/api/photo';
+import { getMe, updateDeptFilter } from '@/lib/api/user';
+import { DeptFilterMode } from '@/lib/types/user.types';
 import { deleteAccount } from '@/lib/api/auth';
 import { handleApiError } from '@/lib/api/handleApiError';
+import { cn } from '@/lib/utils/cn';
 import { ImagePlus, RefreshCw, LogOut, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { detectActualFormat, normalizeToJpeg } from '@/lib/utils/imageConvert';
 
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
+
+const DEPT_FILTER_OPTIONS: { mode: DeptFilterMode; label: string }[] = [
+  { mode: 'ALL', label: '전체' },
+  { mode: 'SAME_ONLY', label: '내 과만' },
+  { mode: 'EXCLUDE_SAME', label: '내 과 제외' },
+];
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -29,11 +38,38 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // 매칭 학과 필터 — 인증된 학과가 있을 때만 섹션 표시
+  const [deptFilterMode, setDeptFilterMode] = useState<DeptFilterMode>('ALL');
+  const [myDepartment, setMyDepartment] = useState<string | null>(null);
+  const [isSavingFilter, setIsSavingFilter] = useState(false);
+
   useEffect(() => {
     getMyPhotoUrl().then((url) => {
       if (url) setCurrentPhotoUrl(url);
     });
+    getMe()
+      .then((profile) => {
+        setDeptFilterMode(profile.deptFilterMode);
+        setMyDepartment(profile.verifiedDepartment);
+      })
+      .catch(() => {});
   }, []);
+
+  const handleDeptFilterChange = async (mode: DeptFilterMode) => {
+    if (mode === deptFilterMode || isSavingFilter) return;
+    const prev = deptFilterMode;
+    setDeptFilterMode(mode); // 낙관적 업데이트
+    setIsSavingFilter(true);
+    try {
+      await updateDeptFilter(mode);
+      toast.success('내일 카드부터 적용돼요');
+    } catch (err) {
+      setDeptFilterMode(prev); // 실패 시 롤백
+      toast.error(handleApiError(err));
+    } finally {
+      setIsSavingFilter(false);
+    }
+  };
 
   const displayUrl = previewUrl ?? currentPhotoUrl;
 
@@ -167,6 +203,37 @@ export default function SettingsPage() {
             }}
           />
         </section>
+
+        {/* 매칭 학과 필터 — 인증된 학과가 있을 때만 표시 */}
+        {myDepartment && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold text-brand-dark">매칭 학과 필터</h2>
+            <p className="text-xs text-brand-mid">
+              내 학과: <span className="font-medium text-brand-dark">{myDepartment}</span>
+            </p>
+            <div className="flex gap-2">
+              {DEPT_FILTER_OPTIONS.map(({ mode, label }) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => handleDeptFilterChange(mode)}
+                  disabled={isSavingFilter}
+                  className={cn(
+                    'flex-1 py-2.5 rounded-xl border text-sm transition-all disabled:opacity-60',
+                    deptFilterMode === mode
+                      ? 'border-brand-rose bg-brand-rose-light text-brand-rose font-semibold'
+                      : 'border-brand-sand text-brand-mid hover:border-brand-rose/50 bg-white'
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-brand-light">
+              변경하면 내일 자정에 갱신되는 카드부터 적용돼요
+            </p>
+          </section>
+        )}
 
         {/* 계정 */}
         <section className="flex flex-col gap-3">

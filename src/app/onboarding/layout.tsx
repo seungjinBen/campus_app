@@ -21,9 +21,9 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
             <ChevronLeft className="h-5 w-5" />
           </button>
           <div className="flex-1">
-            <ProgressBar current={currentStep} total={4} />
+            <ProgressBar current={currentStep} total={5} />
           </div>
-          <span className="text-xs text-brand-light w-8 text-right">{currentStep}/4</span>
+          <span className="text-xs text-brand-light w-8 text-right">{currentStep}/5</span>
         </div>
       </div>
       <main className="flex-1 px-5 py-6">{children}</main>

@@ -36,7 +36,8 @@ export default function SplashPage() {
       }
       try {
         const { complete } = await getProfileComplete();
-        router.replace(complete ? '/match' : '/onboarding/profile');
+        // 미완성 유저는 학생인증(1단계)부터 — 이미 인증된 경우 verify 페이지가 profile로 넘겨줌
+        router.replace(complete ? '/match' : '/onboarding/verify');
       } catch {
         setIsChecking(false);
       }

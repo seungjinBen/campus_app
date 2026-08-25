@@ -29,7 +29,7 @@ export default function PhotoPage() {
       router.replace('/onboarding/profile');
       return;
     }
-    setStep(2);
+    setStep(3);
   }, [profileDraft, router, setStep]);
 
   const handleFileSelect = async (file: File) => {
@@ -93,15 +93,15 @@ export default function PhotoPage() {
       toast.error('사진을 올려야 매칭을 시작할 수 있어요');
       return;
     }
-    setStep(3);
+    setStep(4);
     router.push('/onboarding/traits');
   };
 
   return (
     <div className="flex flex-col gap-6 pb-10">
       <StepIndicator
-        current={2}
-        total={4}
+        current={3}
+        total={5}
         title="나를 표현하는 사진 한 장"
         description="얼굴뿐 아니라 패션, 취미, 반려동물 등 나를 표현하는 사진이면 뭐든 OK"
       />

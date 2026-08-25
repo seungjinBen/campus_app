@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>캠퍼스한장 — 포트폴리오</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #F5F0E8;
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ─── PAGE WRAPPER ─── */
+    .page {
+      width: 1200px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 60px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── DECORATIVE BG ─── */
+    .deco {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .deco-1 {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(255,224,102,0.22) 0%, transparent 68%);
+      top: -100px; right: 40px;
+    }
+    .deco-2 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(255,107,107,0.14) 0%, transparent 70%);
+      bottom: 40px; left: 0;
+    }
+    .deco-3 {
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(255,224,102,0.18) 0%, transparent 70%);
+      bottom: 100px; right: 120px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-mark {
+      width: 50px; height: 50px;
+      background: #1a1a1a;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFE066;
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .header-text p {
+      font-size: 12px;
+      color: #aaa;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+
+    .badge-live {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: white;
+      border: 1px solid #E4DED4;
+      border-radius: 24px;
+      padding: 9px 18px;
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .live-dot {
+      width: 8px; height: 8px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.75); }
+    }
+
+    /* ─── PHONES SECTION ─── */
+    .phones-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      position: relative;
+    }
+
+    /* ground shadow */
+    .phones-section::after {
+      content: '';
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 680px; height: 50px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.16) 0%, transparent 72%);
+      filter: blur(8px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── PHONE GROUP ─── */
+    .phone-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .phone-group.left  { transform: rotate(-3deg) translateY(22px); }
+    .phone-group.center { transform: translateY(-22px); z-index: 2; }
+    .phone-group.right { transform: rotate(3deg) translateY(22px); }
+
+    /* ─── PHONE FRAME ─── */
+    .phone-frame {
+      background: #1a1a1a;
+      border-radius: 48px;
+      padding: 11px;
+      position: relative;
+      box-shadow:
+        0 52px 100px rgba(0,0,0,0.32),
+        0 20px 40px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        inset 0 -1px 0 rgba(0,0,0,0.35);
+    }
+
+    .phone-group.left  .phone-frame,
+    .phone-group.right .phone-frame { width: 230px; height: 468px; }
+    .phone-group.center .phone-frame { width: 254px; height: 514px; border-radius: 52px; }
+
+    /* power button right */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      right: -3px; top: 96px;
+      width: 3px; height: 58px;
+      background: #272727;
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* volume buttons left */
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      left: -3px; top: 72px;
+      width: 3px; height: 34px;
+      background: #272727;
+      border-radius: 3px 0 0 3px;
+      box-shadow: 0 52px 0 #272727;
+    }
+
+    /* ─── PHONE SCREEN ─── */
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 38px;
+      overflow: hidden;
+      background: white;
+      position: relative;
+    }
+
+    .phone-group.center .phone-screen { border-radius: 42px; }
+
+    /* screen gloss */
+    .phone-screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(255,255,255,0.07) 0%, transparent 48%);
+      pointer-events: none;
+      z-index: 50;
+      border-radius: inherit;
+    }
+
+    /* ─── DYNAMIC ISLAND ─── */
+    .di {
+      position: absolute;
+      top: 11px; left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      border-radius: 20px;
+      z-index: 30;
+    }
+
+    .phone-group.left  .di,
+    .phone-group.right .di { width: 88px; height: 24px; }
+    .phone-group.center .di { width: 100px; height: 26px; }
+
+    /* ═══════════════════════════════
+       SCREEN 1: LANDING
+    ═══════════════════════════════ */
+    .s-landing {
+      height: 100%;
+      background: linear-gradient(168deg, #FFFCF2 0%, #FFF5CA 38%, #FFE77A 72%, #FFD60A 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 46px 20px 30px;
+      gap: 0;
+    }
+
+    .l-icon {
+      width: 64px; height: 64px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFE066;
+      font-size: 26px;
+      font-weight: 900;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+      margin-bottom: 16px;
+    }
+
+    .l-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+
+    .l-divider {
+      width: 28px; height: 2px;
+      background: rgba(0,0,0,0.14);
+      border-radius: 1px;
+      margin-bottom: 12px;
+    }
+
+    .l-slogan {
+      font-size: 10.5px;
+      color: rgba(0,0,0,0.48);
+      text-align: center;
+      line-height: 1.9;
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+
+    .l-kakao-btn {
+      width: 100%;
+      height: 46px;
+      background: #2C1A1A;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #FFE066;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .l-k-icon {
+      width: 22px; height: 22px;
+      background: #FFE066;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2C1A1A;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .l-terms {
+      font-size: 9.5px;
+      color: rgba(0,0,0,0.32);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════
+       SCREEN 2: MATCH CARD
+    ═══════════════════════════════ */
+    .s-match {
+      height: 100%;
+      background: #F4F4F4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .m-top {
+      background: white;
+      padding: 44px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .m-top-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .m-top-badge {
+      background: #1a1a1a;
+      color: #FFE066;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 20px;
+    }
+
+    .m-card-wrap {
+      flex: 1;
+      padding: 10px 12px 8px;
+    }
+
+    .m-card {
+      height: 100%;
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .m-photo {
+      height: 50%;
+      background: linear-gradient(138deg, #FFB3BA 0%, #FF8D97 45%, #FF6B6B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .m-avatar {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+      border: 3px solid rgba(255,255,255,0.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .m-photo-tag {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(0,0,0,0.36);
+      color: rgba(255,255,255,0.92);
+      font-size: 9.5px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .m-info {
+      padding: 12px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .m-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .m-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .mt {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .mt-y { background: #FFF8DC; color: #A07800; }
+    .mt-b { background: #E4F0FF; color: #1A5BAB; }
+    .mt-r { background: #FFE8E8; color: #BB3333; }
+    .mt-g { background: #E6F6EC; color: #27703A; }
+
+    .m-desc {
+      font-size: 10.5px;
+      color: #aaa;
+      line-height: 1.55;
+    }
+
+    .m-actions {
+      padding: 8px 12px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .m-btn {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    .m-pass {
+      width: 48px; height: 48px;
+      background: white;
+      border: 2px solid #FFAAAA;
+      color: #FF6B6B;
+      font-size: 18px;
+    }
+
+    .m-like {
+      width: 58px; height: 58px;
+      background: #FF6B6B;
+      border: 2px solid #FF6B6B;
+      color: white;
+      font-size: 22px;
+      box-shadow: 0 8px 24px rgba(255,107,107,0.38);
+    }
+
+    /* ═══════════════════════════════
+       SCREEN 3: NOTE INBOX
+    ═══════════════════════════════ */
+    .s-note {
+      height: 100%;
+      background: #F7F7F7;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .n-top {
+      background: white;
+      padding: 44px 16px 14px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .n-top-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .n-top-sub {
+      font-size: 10.5px;
+      color: #bbb;
+      margin-top: 3px;
+    }
+
+    .n-sender {
+      background: white;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border-bottom: 1px solid #F4F4F4;
+    }
+
+    .n-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFE066 0%, #FFB020 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .n-sender-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .n-sender-traits {
+      font-size: 10px;
+      color: #c0c0c0;
+      margin-top: 2px;
+    }
+
+    .n-body {
+      flex: 1;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .n-msg-box {
+      background: white;
+      border-radius: 16px;
+      padding: 12px 13px;
+      border-left: 3px solid #FFE066;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .n-msg-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #B89000;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .n-msg-text {
+      font-size: 11px;
+      color: #333;
+      line-height: 1.75;
+    }
+
+    .n-score-box {
+      background: white;
+      border-radius: 14px;
+      padding: 11px 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .n-score-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .n-score-lbl { font-size: 10px; color: #aaa; }
+
+    .n-score-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FF6B6B;
+    }
+
+    .n-bar-track {
+      height: 5px;
+      background: #EFEFEF;
+      border-radius: 3px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .n-bar-fill {
+      height: 100%;
+      width: 62%;
+      background: linear-gradient(90deg, #FFE066, #FF8F6B);
+      border-radius: 3px;
+    }
+
+    .n-threshold-mark {
+      position: absolute;
+      left: 70%;
+      top: -5px;
+      width: 1.5px;
+      height: 15px;
+      background: #CCC;
+    }
+
+    .n-threshold-mark::after {
+      content: '70%';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 8.5px;
+      color: #CCC;
+      white-space: nowrap;
+    }
+
+    .n-actions {
+      padding: 4px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .n-btn-pri {
+      background: #1a1a1a;
+      color: white;
+      border-radius: 14px;
+      padding: 13px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .n-btn-sec {
+      background: #EEEEEE;
+      color: #999;
+      border-radius: 14px;
+      padding: 11px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* ─── PHONE LABEL ─── */
+    .phone-label { text-align: center; }
+
+    .label-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .label-desc {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 3px;
+      font-weight: 400;
+    }
+
+    /* ─── STATS ─── */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      padding-top: 20px;
+      margin-top: 4px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 0 52px;
+      border-right: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-size: 30px;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: -1.5px;
+      line-height: 1;
+    }
+
+    .stat-num em { color: #FF6B6B; font-style: normal; }
+    .stat-unit { font-size: 15px; font-weight: 600; }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 6px;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Decorative bg blobs -->
+  <div class="deco deco-1"></div>
+  <div class="deco deco-2"></div>
+  <div class="deco deco-3"></div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">한</div>
+      <div class="header-text">
+        <h1>캠퍼스한장</h1>
+        <p>사진 한 장으로 느낌을 보고, 이상형이 맞으면 바로 연결</p>
+      </div>
+    </div>
+    <div class="badge-live">
+      <span class="live-dot"></span>
+      실 서비스 출시 · 226명 달성
+    </div>
+  </header>
+
+  <!-- ── PHONES ── -->
+  <div class="phones-section">
+
+    <!-- Phone 1: Landing -->
+    <div class="phone-group left">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="di"></div>
+          <div class="s-landing">
+            <div class="l-icon">한</div>
+            <div class="l-title">캠퍼스한장</div>
+            <div class="l-divider"></div>
+            <div class="l-slogan">사진 한 장으로 느낌을 보고<br>이상형이 맞으면 바로 연결</div>
+            <div class="l-kakao-btn">
+              <div class="l-k-icon">K</div>
+              카카오로 시작하기
+            </div>
+            <div class="l-terms">로그인 시 이용약관에 동의합니다</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">
+        <div class="label-name">랜딩 화면</div>
+        <div class="label-desc">카카오 OAuth 소셜 로그인</div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Match Card (center, hero) -->
+    <div class="phone-group center">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="di"></div>
+          <div class="s-match">
+            <div class="m-top">
+              <div class="m-top-title">오늘의 카드 ✨</div>
+              <div class="m-top-badge">3 / 10</div>
+            </div>
+            <div class="m-card-wrap">
+              <div class="m-card">
+                <div class="m-photo">
+                  <div class="m-avatar">🙂</div>
+                  <span class="m-photo-tag">오늘 마지막 방문</span>
+                </div>
+                <div class="m-info">
+                  <div class="m-name">지수 · 22세</div>
+                  <div class="m-tags">
+                    <span class="mt mt-y">🎬 영화</span>
+                    <span class="mt mt-b">☕ 카페</span>
+                    <span class="mt mt-r">🏃 러닝</span>
+                    <span class="mt mt-g">🎵 음악</span>
+                  </div>
+                  <div class="m-desc">주말엔 새로운 카페 탐방하는 걸 좋아해요. 같이 산책할 사람 구해요!</div>
+                </div>
+              </div>
+            </div>
+            <div class="m-actions">
+              <div class="m-btn m-pass">✕</div>
+              <div class="m-btn m-like">♥</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">
+        <div class="label-name">매칭 카드</div>
+        <div class="label-desc">매일 자정 갱신되는 10장의 프로필 카드</div>
+      </div>
+    </div>
+
+    <!-- Phone 3: Note inbox -->
+    <div class="phone-group right">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="di"></div>
+          <div class="s-note">
+            <div class="n-top">
+              <div class="n-top-title">💌 쪽지가 도착했어요</div>
+              <div class="n-top-sub">발신자 정보와 일치율을 확인하세요</div>
+            </div>
+            <div class="n-sender">
+              <div class="n-avatar">😊</div>
+              <div>
+                <div class="n-sender-name">민준 · 23세</div>
+                <div class="n-sender-traits">영화 · 독서 · 음악감상</div>
+              </div>
+            </div>
+            <div class="n-body">
+              <div class="n-msg-box">
+                <div class="n-msg-label">✉ 쪽지 내용</div>
+                <div class="n-msg-text">"안녕하세요! 영화 취향이 비슷할 것 같아서 용기내어 쪽지 보내요 :)"</div>
+              </div>
+              <div class="n-score-box">
+                <div class="n-score-top">
+                  <span class="n-score-lbl">이상형 일치율</span>
+                  <span class="n-score-val">62%</span>
+                </div>
+                <div class="n-bar-track">
+                  <div class="n-bar-fill"></div>
+                  <div class="n-threshold-mark"></div>
+                </div>
+              </div>
+            </div>
+            <div class="n-actions">
+              <div class="n-btn-pri">🤝 연락처 교환하기</div>
+              <div class="n-btn-sec">다음에 볼게요</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">
+        <div class="label-name">쪽지 수신함</div>
+        <div class="label-desc">발신자 정보 + 일치율 확인 후 연결</div>
+      </div>
+    </div>
+
+  </div><!-- /phones-section -->
+
+  <!-- ── STATS ── -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num"><em>226</em><span class="stat-unit">명</span></div>
+      <div class="stat-lbl">총 가입자</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>506</em><span class="stat-unit">건</span></div>
+      <div class="stat-lbl">총 선택 (Selections)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>223</em><span class="stat-unit">건</span></div>
+      <div class="stat-lbl">총 쪽지 전송</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>96</em><span class="stat-unit">시간</span></div>
+      <div class="stat-lbl">서비스 운영 기간</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,12 +1,11 @@
 import apiClient from './axios';
 import { ApiResponse, TraitKey, ContactType, Gender } from '@/lib/types/api.types';
-import { UserProfile, UserTrait, IdealTrait, ProfileCompleteResponse } from '@/lib/types/user.types';
+import { UserProfile, UserTrait, IdealTrait, ProfileCompleteResponse, DeptFilterMode } from '@/lib/types/user.types';
 
+// 생년월일·대학은 학생인증에서 자동 입력 — 요청에 포함하지 않는다
 export const updateProfile = async (body: {
   nickname: string;
   gender: Gender;
-  birthDate: string;
-  university?: string;
   contactType: ContactType;
   contactValue: string;
 }) => {
@@ -28,6 +27,12 @@ export const updateTraits = async (traits: UserTrait[]) => {
 
 export const updateIdeal = async (ideals: IdealTrait[]) => {
   const response = await apiClient.put('/api/users/ideal', { ideals });
+  return response.data as ApiResponse<null>;
+};
+
+// 매칭 학과 필터 변경 — 오늘 카드는 유지, 다음 자정 카드부터 적용
+export const updateDeptFilter = async (mode: DeptFilterMode) => {
+  const response = await apiClient.patch('/api/users/dept-filter', { mode });
   return response.data as ApiResponse<null>;
 };
 

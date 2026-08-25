@@ -44,7 +44,7 @@ export default function TraitsPage() {
       router.replace(photoUploaded ? '/onboarding/profile' : '/onboarding/photo');
       return;
     }
-    setStep(3);
+    setStep(4);
   }, [profileDraft, photoUploaded, router, setStep]);
 
   const updateValue = (key: TraitKey, value: string) => {
@@ -106,7 +106,7 @@ export default function TraitsPage() {
     try {
       await updateTraits(filled);
       setTraitsDraft(filled);
-      setStep(4);
+      setStep(5);
       router.push('/onboarding/ideal');
     } catch (err) {
       toast.error(handleApiError(err));
@@ -222,8 +222,8 @@ export default function TraitsPage() {
   return (
     <div className="flex flex-col gap-6 pb-10">
       <StepIndicator
-        current={3}
-        total={4}
+        current={4}
+        total={5}
         title="나를 표현하는 특징"
         description="카드에 표시할 항목은 공개 토글을 켜두세요"
       />

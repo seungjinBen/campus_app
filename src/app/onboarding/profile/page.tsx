@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { setProfileDraft, setStep, profileDraft } = useOnboardingStore();
+  const { setProfileDraft, setStep, profileDraft, verified } = useOnboardingStore();
 
   const {
     register,
@@ -31,8 +31,6 @@ export default function ProfilePage() {
       gender: profileDraft?.gender ?? 'MALE',
       contactType: profileDraft?.contactType ?? 'INSTAGRAM',
       nickname: profileDraft?.nickname ?? '',
-      birthDate: profileDraft?.birthDate ?? '',
-      university: profileDraft?.university ?? '',
       contactValue: profileDraft?.contactValue ?? '',
     },
   });
@@ -41,31 +39,31 @@ export default function ProfilePage() {
   const selectedContactType = watch('contactType');
 
   useEffect(() => {
-    setStep(1);
-  }, [setStep]);
+    // 학생인증(1단계) 미완료 시 진입 차단
+    if (!verified) {
+      router.replace('/onboarding/verify');
+      return;
+    }
+    setStep(2);
+  }, [verified, router, setStep]);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      const payload: Parameters<typeof updateProfile>[0] = {
+      // 생년월일·대학은 학생인증에서 이미 등록됨 — 닉네임·성별·연락처만 전송
+      await updateProfile({
         nickname: data.nickname,
         gender: data.gender,
-        birthDate: data.birthDate,
         contactType: data.contactType,
         contactValue: data.contactValue,
-      };
-      if (data.university) payload.university = data.university;
-
-      await updateProfile(payload);
+      });
 
       setProfileDraft({
         nickname: data.nickname,
         gender: data.gender,
-        birthDate: data.birthDate,
         contactType: data.contactType,
         contactValue: data.contactValue,
-        university: data.university,
       });
-      setStep(2);
+      setStep(3);
       router.push('/onboarding/photo');
     } catch (err) {
       const code = getApiErrorCode(err);
@@ -79,7 +77,7 @@ export default function ProfilePage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 pb-10">
-      <StepIndicator current={1} total={4} title="기본 정보를 알려주세요" />
+      <StepIndicator current={2} total={5} title="기본 정보를 알려주세요" />
 
       <Input
         label="닉네임"
@@ -117,20 +115,7 @@ export default function ProfilePage() {
         )}
       />
 
-      <Input
-        label="생년월일"
-        placeholder="예) 20000115"
-        maxLength={8}
-        error={errors.birthDate?.message}
-        {...register('birthDate')}
-      />
-
-      <Input
-        label="대학교 (선택)"
-        placeholder="예) 세종대학교"
-        error={errors.university?.message}
-        {...register('university')}
-      />
+      {/* 생년월일·대학·학과는 학생인증(1단계)에서 자동 등록됨 — 입력 필드 없음 */}
 
       {/* 연락처 유형 선택 */}
       <Controller
