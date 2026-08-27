@@ -21,7 +21,6 @@ const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 const DEPT_FILTER_OPTIONS: { mode: DeptFilterMode; label: string }[] = [
   { mode: 'ALL', label: '전체' },
-  { mode: 'SAME_ONLY', label: '내 과만' },
   { mode: 'EXCLUDE_SAME', label: '내 과 제외' },
 ];
 

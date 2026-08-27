@@ -1,6 +1,6 @@
 import { TraitKey, Gender, ContactType } from './api.types';
 
-export type DeptFilterMode = 'ALL' | 'SAME_ONLY' | 'EXCLUDE_SAME';
+export type DeptFilterMode = 'ALL' | 'EXCLUDE_SAME';
 
 export interface UserProfile {
   id: string;

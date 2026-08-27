@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateIdeal } from '@/lib/api/user';
+import { updateIdeal, updateDeptFilter } from '@/lib/api/user';
+import { DeptFilterMode } from '@/lib/types/user.types';
 import { useOnboardingStore } from '@/lib/store/onboardingStore';
 import { handleApiError } from '@/lib/api/handleApiError';
 import { TraitKey } from '@/lib/types/api.types';
@@ -32,10 +33,18 @@ export default function IdealPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showWaitingModal, setShowWaitingModal] = useState(false);
+  // 매칭 진입 직전 학과 필터 선택 — 첫 카드 생성에 즉시 반영됨
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [isSavingFilter, setIsSavingFilter] = useState(false);
   const isNavigatingAway = useRef(false);
 
-  // 매칭 서비스 오픈 일시
-  const MATCHING_START = new Date('2026-05-19T00:00:00');
+  // 매칭 서비스 오픈 일시 — TODO: 기획 확인 필요 — 가을축제 오픈일 확정 시 변경
+  const MATCHING_START = new Date('2026-08-26T00:00:00');
+
+  const FILTER_CHOICES: { mode: DeptFilterMode; label: string; desc: string }[] = [
+    { mode: 'ALL', label: '학과 상관없이 전체', desc: '모든 학과의 카드를 보여드려요' },
+    { mode: 'EXCLUDE_SAME', label: '같은 학과 제외', desc: '아는 사람을 피하고 싶다면 추천해요' },
+  ];
 
   useEffect(() => {
     if (!traitsDraft && !isNavigatingAway.current) {
@@ -102,15 +111,31 @@ export default function IdealPage() {
       setIdealDraft(ideals);
       isNavigatingAway.current = true;
       reset();
-      if (new Date() < MATCHING_START) {
-        setShowWaitingModal(true);
-      } else {
-        router.push('/match');
-      }
+      // 매칭 진입 전 학과 필터 선택 — 선택이 첫 카드 10장 생성에 바로 반영됨
+      setShowFilterModal(true);
     } catch (err) {
       toast.error(handleApiError(err));
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleFilterSelect = async (mode: DeptFilterMode) => {
+    if (isSavingFilter) return;
+    setIsSavingFilter(true);
+    try {
+      await updateDeptFilter(mode);
+    } catch {
+      // 저장 실패 시 기본값(전체)으로 진행 — 설정에서 언제든 변경 가능
+      toast('필터 저장에 실패해 전체 보기로 시작해요', { icon: '⚠️' });
+    } finally {
+      setIsSavingFilter(false);
+    }
+    setShowFilterModal(false);
+    if (new Date() < MATCHING_START) {
+      setShowWaitingModal(true);
+    } else {
+      router.push('/match');
     }
   };
 
@@ -293,6 +318,36 @@ export default function IdealPage() {
       <Button size="lg" fullWidth onClick={handleSubmit} isLoading={isSubmitting}>
         매칭 시작하기
       </Button>
+
+      {/* 매칭 진입 전 학과 필터 선택 모달 */}
+      {showFilterModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-5 shadow-modal">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🎓</div>
+              <p className="font-bold text-brand-dark text-lg">어떤 분들을 보여드릴까요?</p>
+              <p className="text-sm text-brand-mid mt-2 leading-relaxed">
+                매칭 카드에 나올 상대의 학과 범위를 선택해 주세요
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              {FILTER_CHOICES.map(({ mode, label, desc }) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => handleFilterSelect(mode)}
+                  disabled={isSavingFilter}
+                  className="w-full py-3.5 px-4 rounded-2xl border border-brand-sand bg-white text-left transition-all hover:border-brand-rose hover:bg-brand-rose-light/40 disabled:opacity-50"
+                >
+                  <p className="text-sm font-semibold text-brand-dark">{label}</p>
+                  <p className="text-xs text-brand-mid mt-0.5">{desc}</p>
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-brand-light text-center">설정에서 언제든 변경할 수 있어요</p>
+          </div>
+        </div>
+      )}
 
       {showWaitingModal && (
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateTraits } from '@/lib/api/user';
+import { updateTraits, getMe } from '@/lib/api/user';
 import { useOnboardingStore } from '@/lib/store/onboardingStore';
 import { handleApiError } from '@/lib/api/handleApiError';
 import { TraitKey } from '@/lib/types/api.types';
@@ -38,6 +38,8 @@ export default function TraitsPage() {
     return initial as Record<TraitKey, TraitEntry>;
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // 학과는 학생인증에서 확정 — 입력 불가, 표시 전용
+  const [verifiedDepartment, setVerifiedDepartment] = useState<string | null>(null);
 
   useEffect(() => {
     if (!profileDraft || !photoUploaded) {
@@ -46,6 +48,22 @@ export default function TraitsPage() {
     }
     setStep(4);
   }, [profileDraft, photoUploaded, router, setStep]);
+
+  useEffect(() => {
+    getMe()
+      .then((profile) => {
+        const dept = profile.verifiedDepartment;
+        if (dept) {
+          setVerifiedDepartment(dept);
+          // 인증 학과를 MAJOR 값으로 프리필 — 서버 가드가 최종 강제하지만 UI도 일치시킴
+          setTraits((prev) => ({
+            ...prev,
+            MAJOR: { ...prev.MAJOR, traitValue: dept },
+          }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const updateValue = (key: TraitKey, value: string) => {
     setTraits((prev) => ({
@@ -117,6 +135,16 @@ export default function TraitsPage() {
 
   const renderInput = (key: TraitKey) => {
     const entry = traits[key];
+
+    // 학과는 학생인증에서 확정된 값 — 읽기 전용, 공개 토글만 조작 가능
+    if (key === 'MAJOR' && verifiedDepartment) {
+      return (
+        <div className="w-full rounded-xl border border-brand-sand bg-brand-warm px-4 py-3 text-sm text-brand-dark flex items-center justify-between">
+          <span>{verifiedDepartment}</span>
+          <span className="text-xs text-brand-rose font-medium">인증으로 확인됨 ✓</span>
+        </div>
+      );
+    }
 
     if (key === 'ANIMAL_FACE') {
       const selected = parseMulti(entry.traitValue);
