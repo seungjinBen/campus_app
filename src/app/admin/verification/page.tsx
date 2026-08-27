@@ -12,6 +12,7 @@ import {
 import { useAuthStore } from '@/lib/store/authStore';
 import { handleApiError } from '@/lib/api/handleApiError';
 import Button from '@/components/ui/Button';
+import IconBadge from '@/components/ui/IconBadge';
 import { Check, Loader2, RefreshCw, ShieldQuestion, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -112,8 +113,8 @@ export default function AdminVerificationPage() {
           <Loader2 className="h-6 w-6 animate-spin text-brand-rose" />
         </div>
       ) : queue.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-16 text-center">
-          <span className="text-4xl">🎉</span>
+        <div className="flex flex-col items-center gap-4 py-16 text-center">
+          <IconBadge icon={Check} />
           <p className="text-sm text-brand-mid">검수 대기 건이 없어요</p>
         </div>
       ) : (

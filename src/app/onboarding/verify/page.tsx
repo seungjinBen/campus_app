@@ -11,7 +11,8 @@ import { useOnboardingStore } from '@/lib/store/onboardingStore';
 import { handleApiError } from '@/lib/api/handleApiError';
 import StepIndicator from '@/components/onboarding/StepIndicator';
 import Button from '@/components/ui/Button';
-import { ImagePlus, Loader2, RefreshCw, ShieldCheck } from 'lucide-react';
+import IconBadge from '@/components/ui/IconBadge';
+import { Clock, ImagePlus, Loader2, RefreshCw, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // AI 판정 결과에 따른 화면 상태 — discriminated union으로 분기 명시
@@ -112,7 +113,7 @@ export default function VerifyPage() {
       } else if (res.status === 'REJECTED') {
         setState({ type: 'rejected', reason: '검수 결과 인증이 거절됐어요. 다시 시도해 주세요.' });
       } else {
-        toast('아직 검수 중이에요. 조금만 기다려 주세요', { icon: '⏳' });
+        toast('아직 검수 중이에요. 조금만 기다려 주세요');
       }
     } catch (err) {
       toast.error(handleApiError(err));
@@ -213,7 +214,7 @@ export default function VerifyPage() {
 
       {state.type === 'review' && (
         <div className="flex flex-col items-center gap-6 py-16 text-center">
-          <div className="text-5xl">⏳</div>
+          <IconBadge icon={Clock} />
           <div>
             <p className="text-xl font-bold text-brand-dark">검수 중이에요</p>
             <p className="text-sm text-brand-mid mt-2 leading-relaxed">

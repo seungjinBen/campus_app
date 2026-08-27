@@ -6,7 +6,8 @@ import { ReceivedContact, ReceivedNote } from '@/lib/types/match.types';
 import { handleApiError } from '@/lib/api/handleApiError';
 import ReceivedContactCard from '@/components/match/ReceivedContactCard';
 import ReceivedNoteCard from '@/components/match/ReceivedNoteCard';
-import { Loader2 } from 'lucide-react';
+import IconBadge from '@/components/ui/IconBadge';
+import { Loader2, Lock, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type Tab = 'contacts' | 'notes';
@@ -81,8 +82,8 @@ export default function ReceivedPage() {
       {tab === 'contacts' && (
         <>
           {contacts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <span className="text-4xl">🔒</span>
+            <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+              <IconBadge icon={Lock} />
               <p className="text-brand-mid text-sm">아직 아무도 당신의 연락처를 열람하지 않았어요</p>
             </div>
           ) : (
@@ -96,8 +97,8 @@ export default function ReceivedPage() {
       {tab === 'notes' && (
         <>
           {notes.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <span className="text-4xl">💌</span>
+            <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+              <IconBadge icon={Mail} />
               <p className="text-brand-mid text-sm">아직 받은 쪽지가 없어요</p>
             </div>
           ) : (

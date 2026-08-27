@@ -4,150 +4,213 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import KakaoLoginButton from '@/components/auth/KakaoLoginButton';
 import { CampusLogo } from '@/components/CampusLogo';
+import HeroCardStack from '@/components/landing/HeroCardStack';
+import StoryStep from '@/components/landing/StoryStep';
+import MatchGauge from '@/components/landing/MatchGauge';
+import MockAvatar from '@/components/landing/MockAvatar';
 import { getProfileComplete } from '@/lib/api/user';
-import { Loader2, Lock } from 'lucide-react';
+import { ChevronDown, EyeOff, Heart, Loader2, Lock, ShieldCheck } from 'lucide-react';
 
-const faqs = [
-  {
-    q: '전혀 모르는 사람이 내 번호를 갖는 게 불안하지 않나요?',
-    a: '연락처는 이상형 일치율 70% 이상일 때만 공개돼요. 무작위 유포는 불가능해요.',
-  },
-  {
-    q: '축제 부스에서 번호 고르기 부끄러웠던 적 있지 않나요?',
-    a: '온라인 매칭부스로 편하게, 사진으로 느낌까지 확인하세요.',
-  },
-  {
-    q: '텍스트만으론 상대방 느낌을 알기 어렵지 않나요?',
-    a: '프로필 사진 한 장으로 첫인상을 확인하고 연결돼요.',
-  },
+// 스텝 1 미니 카드 그리드 — 파스텔 톤 + 톤 매칭 아바타 실루엣
+const MINI_TILES = [
+  { gradient: 'from-rose-100 to-rose-50', accent: 'text-rose-300' },
+  { gradient: 'from-sky-100 to-sky-50', accent: 'text-sky-300' },
+  { gradient: 'from-amber-100 to-amber-50', accent: 'text-amber-300' },
+  { gradient: 'from-emerald-100 to-emerald-50', accent: 'text-emerald-300' },
+  { gradient: 'from-violet-100 to-violet-50', accent: 'text-violet-300' },
+  { gradient: 'from-stone-100 to-stone-50', accent: 'text-stone-300' },
 ];
+
+// 스토리 섹션 시작을 표시하는 악센트 바 — 번호 대신 영역 구분
+function SectionBar() {
+  return <div className="w-10 h-[3px] rounded-full bg-brand-rose/50 mb-3" aria-hidden="true" />;
+}
 
 export default function SplashPage() {
   const router = useRouter();
-  const [isChecking, setIsChecking] = useState(true);
+  // LCP 최적화 — 비로그인 방문자(랜딩의 주 대상)는 인증 체크를 기다리지 않고 즉시 콘텐츠를 본다.
+  // 토큰이 있는 유저에게만 리다이렉트 오버레이를 띄운다 (첫 페인트가 하이드레이션에 묶이지 않도록)
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        setIsChecking(false);
-        return;
-      }
-      try {
-        const { complete } = await getProfileComplete();
-        // 미완성 유저는 학생인증(1단계)부터 — 이미 인증된 경우 verify 페이지가 profile로 넘겨줌
-        router.replace(complete ? '/match' : '/onboarding/verify');
-      } catch {
-        setIsChecking(false);
-      }
-    };
-    checkAuth();
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    setIsRedirecting(true);
+    getProfileComplete()
+      // 미완성 유저는 학생인증(1단계)부터 — 이미 인증된 경우 verify 페이지가 profile로 넘겨줌
+      .then(({ complete }) => router.replace(complete ? '/match' : '/onboarding/verify'))
+      .catch(() => setIsRedirecting(false));
   }, [router]);
 
-  if (isChecking) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-brand-cream">
-        <Loader2 className="h-6 w-6 animate-spin text-brand-rose" />
-      </div>
-    );
-  }
-
   return (
-    <main className="h-screen flex flex-col bg-brand-cream overflow-hidden">
-
+    <main className="min-h-screen flex flex-col bg-brand-cream">
+      {/* 로그인 유저 리다이렉트 중 오버레이 */}
+      {isRedirecting && (
+        <div className="fixed inset-0 z-[60] bg-brand-cream flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-brand-rose" />
+        </div>
+      )}
       {/* 스크롤 영역 */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-36">
 
-      {/* 운영 대학 뱃지 — 최상단 */}
-      <div className="flex items-center justify-center gap-2 px-6 pt-5 pb-3 flex-wrap">
-        <span className="text-xs text-brand-mid">현재</span>
-        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-green-200 text-xs font-medium text-green-600 bg-green-50">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-          건국대학교
-        </span>
-        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-red-200 text-xs font-medium text-red-500 bg-red-50">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
-          세종대학교
-        </span>
-        <span className="text-xs text-brand-mid">학생 대상 운영 중</span>
-      </div>
-
-      {/* 로고 + 브랜드명 */}
-      <div className="flex flex-col items-center pt-6 pb-4 px-6">
-        <CampusLogo size={96} />
-        <h1 className="mt-3 text-2xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
-        <p className="text-sm text-brand-mid mt-1">대학생의 단 한 장</p>
-      </div>
-
-      {/* 메인 카피 */}
-      <div className="px-6 pb-7 text-center">
-        <p className="text-xl font-bold text-brand-dark leading-snug tracking-tight">
-          사진 한 장, 하루{' '}
-          <span className="relative inline-block">
-            <span className="relative z-10">세 번</span>
-            <span className="absolute inset-x-0 bottom-0.5 h-[0.65em] bg-yellow-300/70 rounded-sm -z-0" />
+        {/* ── ① HERO ─────────────────────────────────── */}
+        <section className="min-h-[92dvh] flex flex-col items-center justify-center px-6 pt-8 pb-6 relative">
+          {/* 시즌 뱃지 */}
+          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-rose/25 text-xs font-medium text-brand-rose bg-brand-rose-light mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-rose inline-block" />
+            2026 세종대학교 가을축제
           </span>
-          의 설렘
-          <br />
-          당신이 누군가의 이상형이라면,
-          <br />
-          바로 연결돼요
-        </p>
-      </div>
 
-      {/* 구분선 */}
-      <div className="mx-6 h-px bg-brand-sand mb-6" />
-
-      {/* FAQ 카드 목록 */}
-      <div className="flex-1 px-5 space-y-3 pb-6">
-        {faqs.map((item, i) => (
-          <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-card border border-brand-sand">
-            <div className="flex items-start gap-3 px-4 py-3.5 border-b border-brand-sand">
-              <span className="flex-shrink-0 w-6 h-6 rounded-md bg-brand-dark flex items-center justify-center text-white text-[11px] font-bold">
-                Q
-              </span>
-              <p className="text-sm text-brand-mid leading-snug pt-0.5">{item.q}</p>
-            </div>
-            <div className="flex items-start gap-3 px-4 py-3.5">
-              <span className="flex-shrink-0 w-6 h-6 rounded-md bg-brand-rose flex items-center justify-center text-white text-[11px] font-bold">
-                A
-              </span>
-              <p className="text-sm text-brand-dark font-semibold leading-snug pt-0.5">{item.a}</p>
-            </div>
+          <div className="flex items-center gap-2 mb-8">
+            <CampusLogo size={36} />
+            <h1 className="text-xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
           </div>
-        ))}
 
-        {/* 보안 배너 */}
-        <div className="bg-brand-rose-light border border-brand-rose/15 rounded-2xl px-5 py-4 flex items-start gap-4 mt-1">
-          <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-brand-rose/10 flex items-center justify-center mt-0.5">
-            <Lock className="w-4 h-4 text-brand-rose" />
-          </div>
-          <div>
-            <p className="text-brand-rose font-bold text-sm mb-1">연락처 무방비 유포 걱정 없어요</p>
-            <p className="text-brand-mid text-xs leading-relaxed">
-              이상형 일치율 70% 이상인 사람에게만 연락처가 제공돼요.<br />
-              실제 테스트 결과, 70% 일치면 정말 잘 맞는 사람이에요.
+          {/* 인터랙티브 카드 스택 */}
+          <HeroCardStack />
+
+          {/* 메인 카피 */}
+          <div className="text-center mt-9">
+            <p className="text-2xl font-bold text-brand-dark leading-snug tracking-tight">
+              사진 한 장으로
+              <br />
+              시작되는 설렘
+            </p>
+            <p className="text-sm text-brand-mid mt-3 leading-relaxed">
+              당신이 누군가의{' '}
+              <span className="relative inline-block font-semibold text-brand-dark">
+                <span className="relative z-10">이상형</span>
+                <span className="absolute inset-x-0 bottom-0 h-[0.55em] bg-yellow-300/70 rounded-sm" />
+              </span>
+              이라면, 연락처가 바로 열려요
             </p>
           </div>
-        </div>
 
-        {/* 실시간 가입자 알림 */}
-        <div className="flex justify-center">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-            </span>
-            <span className="text-xs text-green-600 font-semibold">현재 <span className="font-bold">220+</span>명 가입 중</span>
+          {/* 스크롤 유도 */}
+          <ChevronDown
+            className="h-5 w-5 text-brand-light absolute bottom-4 animate-bounce motion-reduce:animate-none"
+            aria-hidden="true"
+          />
+        </section>
+
+        {/* ── ② 스텝 1: 카드 도착 ─────────────────────── */}
+        <StoryStep>
+          <SectionBar />
+          <h2 className="text-lg font-bold text-brand-dark leading-snug">
+            매일 자정, 새로운 카드
+            <br />
+            10장이 도착해요
+          </h2>
+          <div className="grid grid-cols-3 gap-2 mt-5">
+            {MINI_TILES.map(({ gradient, accent }) => (
+              <div
+                key={gradient}
+                className={`aspect-[3/4] rounded-xl bg-gradient-to-b ${gradient} flex items-center justify-center shadow-card`}
+                aria-hidden="true"
+              >
+                <MockAvatar className={`w-12 h-12 ${accent}`} />
+              </div>
+            ))}
           </div>
-        </div>
+        </StoryStep>
+
+        {/* ── ③ 스텝 2: 희소한 선택 ───────────────────── */}
+        <StoryStep>
+          <SectionBar />
+          <h2 className="text-lg font-bold text-brand-dark leading-snug">
+            아껴 쓰는 선택이라,
+            <br />한 번 한 번이 진심이에요
+          </h2>
+          <p className="text-sm text-brand-mid mt-2 leading-relaxed">
+            무한 스와이프는 없어요. 선택 기회가 한정되어 있어
+            <br />
+            서로가 더 신중하고, 더 설레게 돼요.
+          </p>
+          <div className="mt-5 bg-white rounded-2xl border border-brand-sand shadow-card p-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Heart className="h-4 w-4 text-brand-rose fill-brand-rose/20" />
+              <span className="text-sm text-brand-dark font-medium">오늘의 선택</span>
+            </div>
+            <button
+              type="button"
+              tabIndex={-1}
+              className="px-4 py-2 rounded-full bg-brand-dark text-white text-sm font-semibold pointer-events-none"
+              aria-hidden="true"
+            >
+              선택 →
+            </button>
+          </div>
+        </StoryStep>
+
+        {/* ── ④ 스텝 3: 75% 게이지 (하이라이트) ─────────── */}
+        <StoryStep>
+          <SectionBar />
+          <h2 className="text-lg font-bold text-brand-dark leading-snug">
+            이상형 일치율 75%를 넘으면
+            <br />
+            연락처가 바로 열려요
+          </h2>
+          <p className="text-sm text-brand-mid mt-2 leading-relaxed">
+            아직 부족하다면 50자 쪽지로 먼저 마음을 전해요.
+          </p>
+          <div className="mt-5">
+            <MatchGauge />
+          </div>
+        </StoryStep>
+
+        {/* ── ⑤ 스텝 4: AI 학생인증 ───────────────────── */}
+        <StoryStep>
+          <SectionBar />
+          <h2 className="text-lg font-bold text-brand-dark leading-snug">
+            AI가 학생증을 확인해요
+          </h2>
+          <p className="text-sm text-brand-mid mt-2 leading-relaxed">
+            세종대 학생앱 화면 한 장이면 몇 초 만에 인증 끝.
+            <br />
+            확인된 세종대 학생만 만날 수 있어요.
+          </p>
+          <div className="mt-5 flex items-center gap-2">
+            {['캡처 올리기', 'AI 확인', '인증 완료'].map((step, i) => (
+              <div key={step} className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="flex-1 bg-white rounded-xl border border-brand-sand shadow-card px-2 py-3 text-center">
+                  <p className="text-[11px] text-brand-dark font-medium whitespace-nowrap">{step}</p>
+                </div>
+                {i < 2 && <span className="text-brand-light text-xs flex-shrink-0">→</span>}
+              </div>
+            ))}
+          </div>
+        </StoryStep>
+
+        {/* ── ⑥ 신뢰 배너 ─────────────────────────────── */}
+        <StoryStep className="pb-6">
+          <div className="bg-white rounded-2xl border border-brand-sand shadow-card p-5 flex flex-col gap-4">
+            <p className="text-sm font-bold text-brand-dark">안심하고 써도 되는 이유</p>
+            <div className="flex flex-col gap-3">
+              {[
+                { icon: Lock, text: '연락처는 암호화되어 저장돼요' },
+                { icon: EyeOff, text: '일치율 미달이면 누구에게도 공개되지 않아요' },
+                { icon: ShieldCheck, text: 'AI 학생인증으로 세종대 학생만 가입해요' },
+              ].map(({ icon: Icon, text }) => (
+                <div key={text} className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-brand-rose/10 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-4 h-4 text-brand-rose" />
+                  </div>
+                  <p className="text-sm text-brand-mid">{text}</p>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-brand-sand pt-3 text-center">
+              <p className="text-xs text-brand-mid">
+                지난 봄 시즌, <span className="font-bold text-brand-rose">226명</span>이 함께했어요
+              </p>
+            </div>
+          </div>
+        </StoryStep>
       </div>
 
-      </div>{/* 스크롤 영역 끝 */}
-
-      {/* 하단 CTA — 고정 */}
-      <div className="flex-shrink-0 px-6 pt-4 pb-8 flex flex-col items-center gap-3 bg-white border-t border-brand-sand shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+      {/* ── ⑦ 하단 고정 CTA ──────────────────────────── */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto px-6 pt-4 pb-7 flex flex-col items-center gap-3 bg-white border-t border-brand-sand shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
         <label className="flex items-start gap-2.5 w-full max-w-xs cursor-pointer">
           <input
             type="checkbox"

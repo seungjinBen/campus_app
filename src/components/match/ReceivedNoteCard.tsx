@@ -4,10 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ReceivedNote } from '@/lib/types/match.types';
 import { formatTraitBadge } from '@/lib/utils/traitLabel';
-import Badge from '@/components/ui/Badge';
 import { Check, Contact, MessageSquare, X } from 'lucide-react';
-
-const BADGE_COLORS = ['rose', 'blue', 'violet', 'emerald', 'amber'] as const;
 import { respondToNote } from '@/lib/api/match';
 import toast from 'react-hot-toast';
 
@@ -55,10 +52,13 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
 
           {item.visibleTraits.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
-              {item.visibleTraits.map(({ traitKey, traitValue }, i) => (
-                <Badge key={traitKey} variant={BADGE_COLORS[i % BADGE_COLORS.length]} className="text-xs">
+              {item.visibleTraits.map(({ traitKey, traitValue }) => (
+                <span
+                  key={traitKey}
+                  className="text-[11px] px-2 py-0.5 rounded-full bg-white border border-brand-sand text-brand-mid font-medium"
+                >
                   {formatTraitBadge(traitKey, traitValue)}
-                </Badge>
+                </span>
               ))}
             </div>
           )}
@@ -69,9 +69,9 @@ export default function ReceivedNoteCard({ item, onRespond }: ReceivedNoteCardPr
           </div>
 
           {item.status === 'ACCEPTED' && item.selectorContactValue && (
-            <div className="flex items-center gap-1.5 mt-2 p-2 bg-[#F0FDF4] rounded-lg border border-[#BBF7D0]">
-              <Contact className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
-              <p className="text-sm text-green-700 font-medium">{item.selectorContactValue}</p>
+            <div className="flex items-center gap-1.5 mt-2 p-2 bg-emerald-50 rounded-lg border border-emerald-200">
+              <Contact className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
+              <p className="text-sm text-emerald-700 font-medium">{item.selectorContactValue}</p>
             </div>
           )}
 

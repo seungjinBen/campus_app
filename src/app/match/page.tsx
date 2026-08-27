@@ -10,7 +10,8 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { SelectResult } from '@/lib/types/match.types';
 import MatchCardList from '@/components/match/MatchCardList';
 import Button from '@/components/ui/Button';
-import { Loader2 } from 'lucide-react';
+import IconBadge from '@/components/ui/IconBadge';
+import { Calendar, Heart, Loader2, Mail, Moon, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function MatchPage() {
@@ -77,7 +78,7 @@ export default function MatchPage() {
     setIsSendingNote(true);
     try {
       await sendNote(selectResult.selectedId, noteContent.trim());
-      toast.success('쪽지를 전달했어요 💌');
+      toast.success('쪽지를 전달했어요');
       setSelectResult(null);
       setNoteContent('');
       // 선택 후 남은 횟수 반영
@@ -108,7 +109,7 @@ export default function MatchPage() {
     if (state.type === 'error') {
       const errMsg = (state as { type: 'error'; message: string }).message;
       if (errMsg.includes('프로필')) {
-        toast('프로필을 먼저 완성해 주세요', { icon: '⚠️' });
+        toast('프로필을 먼저 완성해 주세요');
         router.replace('/onboarding/profile');
       }
     }
@@ -129,7 +130,7 @@ export default function MatchPage() {
             disabled={isResetting}
             className="ml-auto py-1.5 px-3 rounded-xl border border-brand-sand bg-brand-warm text-brand-mid text-xs font-medium disabled:opacity-50"
           >
-            {isResetting ? '초기화 중...' : '🛠 카드 초기화'}
+            {isResetting ? '초기화 중...' : '카드 초기화'}
           </button>
         </div>
       )}
@@ -187,12 +188,13 @@ export default function MatchPage() {
 
       {state.type === 'waiting' && (
         <div className="flex flex-col items-center gap-6 py-16 text-center">
-          <div className="text-6xl">🌸</div>
+          <IconBadge icon={Calendar} />
           <div>
-            <p className="text-xl font-bold text-brand-dark">5월 19일 자정부터 시작돼요</p>
+            <p className="text-xl font-bold text-brand-dark">곧 시작돼요</p>
+            {/* TODO: 기획 확인 필요 — 가을축제 오픈일 확정 시 날짜 명시 */}
             <p className="text-sm text-brand-mid mt-3 leading-relaxed">
-              매칭 서비스는 <span className="font-semibold text-brand-rose">2026년 5월 19일 00:00</span>에<br />
-              공식 오픈돼요. 조금만 기다려 주세요!
+              매칭은 <span className="font-semibold text-brand-rose">축제 기간</span>에 공식 오픈돼요.<br />
+              조금만 기다려 주세요!
             </p>
           </div>
           <Link href="/settings">
@@ -203,11 +205,11 @@ export default function MatchPage() {
 
       {state.type === 'limit_reached' && (
         <div className="flex flex-col items-center gap-6 py-16 text-center">
-          <div className="text-5xl">🌙</div>
+          <IconBadge icon={Moon} />
           <div>
             <p className="text-xl font-bold text-brand-dark">오늘 선택을 모두 사용했어요</p>
             <p className="text-sm text-brand-mid mt-2 leading-relaxed">
-              내일 자정에 다시 3번의 선택 기회가 생겨요.<br />
+              내일 자정에 새로운 선택 기회가 생겨요.<br />
               받은 쪽지나 연락처를 확인해 보세요!
             </p>
           </div>
@@ -219,7 +221,7 @@ export default function MatchPage() {
 
       {state.type === 'empty' && (
         <div className="flex flex-col items-center gap-4 py-20 text-center">
-          <div className="text-5xl">🔍</div>
+          <IconBadge icon={Search} />
           <div>
             <p className="text-xl font-bold text-brand-dark">아직 등록된 분이 없어요</p>
             <p className="text-sm text-brand-mid mt-2 leading-relaxed">
@@ -249,7 +251,7 @@ export default function MatchPage() {
 
           {state.remainingSelectCount === 0 && (
             <div className="flex items-center gap-2 px-3 py-2.5 bg-brand-cream rounded-xl text-sm text-brand-mid">
-              <span>🌙</span>
+              <Moon className="h-4 w-4 text-brand-mid flex-shrink-0" />
               <p>오늘 선택을 모두 사용했어요. 내일 자정에 초기화돼요.</p>
             </div>
           )}
@@ -318,7 +320,9 @@ export default function MatchPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <div className="text-4xl mb-2">💘</div>
+              <div className="flex justify-center mb-3">
+                <IconBadge icon={Heart} />
+              </div>
               <p className="font-bold text-brand-dark text-lg whitespace-pre-line">
                 {selectResult.message.replace(/\s*💘\s*/g, '\n')}
               </p>
@@ -349,7 +353,9 @@ export default function MatchPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <div className="text-4xl mb-2">💌</div>
+              <div className="flex justify-center mb-3">
+                <IconBadge icon={Mail} />
+              </div>
               <p className="font-bold text-brand-dark text-base">
                 {selectResult.message.replace(/\s*💌\s*/g, '')}
               </p>

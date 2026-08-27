@@ -3,10 +3,7 @@
 import Image from 'next/image';
 import { ReceivedContact } from '@/lib/types/match.types';
 import { formatTraitBadge } from '@/lib/utils/traitLabel';
-import Badge from '@/components/ui/Badge';
 import { Eye } from 'lucide-react';
-
-const BADGE_COLORS = ['rose', 'blue', 'violet', 'emerald', 'amber'] as const;
 
 interface ReceivedContactCardProps {
   item: ReceivedContact;
@@ -36,10 +33,13 @@ export default function ReceivedContactCard({ item }: ReceivedContactCardProps) 
 
           {item.visibleTraits.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
-              {item.visibleTraits.map(({ traitKey, traitValue }, i) => (
-                <Badge key={traitKey} variant={BADGE_COLORS[i % BADGE_COLORS.length]} className="text-xs">
+              {item.visibleTraits.map(({ traitKey, traitValue }) => (
+                <span
+                  key={traitKey}
+                  className="text-[11px] px-2 py-0.5 rounded-full bg-white border border-brand-sand text-brand-mid font-medium"
+                >
                   {formatTraitBadge(traitKey, traitValue)}
-                </Badge>
+                </span>
               ))}
             </div>
           )}

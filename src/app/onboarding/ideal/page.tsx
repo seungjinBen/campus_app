@@ -20,6 +20,8 @@ import {
 } from '@/lib/utils/traitLabel';
 import StepIndicator from '@/components/onboarding/StepIndicator';
 import Button from '@/components/ui/Button';
+import IconBadge from '@/components/ui/IconBadge';
+import { Calendar, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import toast from 'react-hot-toast';
 
@@ -127,7 +129,7 @@ export default function IdealPage() {
       await updateDeptFilter(mode);
     } catch {
       // 저장 실패 시 기본값(전체)으로 진행 — 설정에서 언제든 변경 가능
-      toast('필터 저장에 실패해 전체 보기로 시작해요', { icon: '⚠️' });
+      toast('필터 저장에 실패해 전체 보기로 시작해요');
     } finally {
       setIsSavingFilter(false);
     }
@@ -324,7 +326,9 @@ export default function IdealPage() {
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-5 shadow-modal">
             <div className="text-center">
-              <div className="text-4xl mb-2">🎓</div>
+              <div className="flex justify-center mb-3">
+                <IconBadge icon={GraduationCap} />
+              </div>
               <p className="font-bold text-brand-dark text-lg">어떤 분들을 보여드릴까요?</p>
               <p className="text-sm text-brand-mid mt-2 leading-relaxed">
                 매칭 카드에 나올 상대의 학과 범위를 선택해 주세요
@@ -353,12 +357,13 @@ export default function IdealPage() {
         <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-5 shadow-modal">
             <div className="text-center">
-              <div className="text-5xl mb-3">🌸</div>
+              <div className="flex justify-center mb-3">
+                <IconBadge icon={Calendar} />
+              </div>
               <p className="font-bold text-brand-dark text-lg">가입이 완료됐어요!</p>
+              {/* TODO: 기획 확인 필요 — 가을축제 오픈일 확정 시 날짜 명시 */}
               <p className="text-sm text-brand-mid mt-3 leading-relaxed">
-                매칭 서비스는{' '}
-                <span className="font-semibold text-brand-rose">5월 19일 자정</span>
-                부터 시작돼요.<br />
+                매칭은 <span className="font-semibold text-brand-rose">축제 기간</span>에 공식 오픈돼요.<br />
                 오픈까지 조금만 기다려 주세요!
               </p>
             </div>
