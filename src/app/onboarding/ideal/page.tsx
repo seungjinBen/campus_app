@@ -45,7 +45,7 @@ export default function IdealPage() {
 
   const FILTER_CHOICES: { mode: DeptFilterMode; label: string; desc: string }[] = [
     { mode: 'ALL', label: '학과 상관없이 전체', desc: '모든 학과의 카드를 보여드려요' },
-    { mode: 'EXCLUDE_SAME', label: '같은 학과 제외', desc: '아는 사람을 피하고 싶다면 추천해요' },
+    { mode: 'EXCLUDE_SAME', label: '같은 학과 제외', desc: '같은 학과와는 서로의 카드에 나타나지 않아요' },
   ];
 
   useEffect(() => {

@@ -229,7 +229,8 @@ export default function SettingsPage() {
               ))}
             </div>
             <p className="text-xs text-brand-light">
-              변경하면 내일 자정에 갱신되는 카드부터 적용돼요
+              &apos;내 과 제외&apos;를 선택하면 같은 학과와는 서로의 카드에 나타나지 않아요.<br />
+              변경은 내일 자정에 갱신되는 카드부터 적용돼요
             </p>
           </section>
         )}
