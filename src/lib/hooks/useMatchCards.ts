@@ -7,7 +7,7 @@ import { getApiErrorCode } from '@/lib/api/handleApiError';
 
 export type MatchPageState =
   | { type: 'loading' }
-  | { type: 'cards'; cards: MatchCard[]; remainingSelectCount: number }
+  | { type: 'cards'; cards: MatchCard[]; remainingSelectCount: number; dailySelectLimit: number }
   | { type: 'empty' }
   | { type: 'limit_reached' }
   | { type: 'waiting' }
@@ -26,14 +26,14 @@ export function useMatchCards() {
     try {
       setState({ type: 'loading' });
 
-      const { cards, remainingSelectCount } = await getMatchCards();
+      const { cards, remainingSelectCount, dailySelectLimit } = await getMatchCards();
 
       if (cards.length === 0) {
         setState({ type: 'empty' });
         return;
       }
 
-      setState({ type: 'cards', cards, remainingSelectCount });
+      setState({ type: 'cards', cards, remainingSelectCount, dailySelectLimit });
     } catch (err: unknown) {
       const code = getApiErrorCode(err);
 

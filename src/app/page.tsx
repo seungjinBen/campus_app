@@ -34,6 +34,10 @@ export default function SplashPage() {
   const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
+    // 초대 링크 ?ref= 캡처 — 가입(카카오 콜백) 시 백엔드에 전달 (useSearchParams 대신 window 사용 — Suspense 요구 회피)
+    const refCode = new URLSearchParams(window.location.search).get('ref');
+    if (refCode) localStorage.setItem('refCode', refCode);
+
     const token = localStorage.getItem('accessToken');
     if (!token) return;
     setIsRedirecting(true);

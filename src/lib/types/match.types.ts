@@ -13,6 +13,8 @@ export interface MatchCard {
 export interface DailyCardsResponse {
   cards: MatchCard[];
   remainingSelectCount: number;
+  // 유저별 동적 한도 (기본 2 + 얼리버드 + 리퍼럴, 최대 4) — "N/limit" 표시용
+  dailySelectLimit: number;
 }
 
 export type SelectResultType = 'CONTACT_REVEALED' | 'NOTE_REQUIRED';

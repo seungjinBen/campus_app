@@ -11,7 +11,7 @@ import {
 export const getMatchCards = async (): Promise<DailyCardsResponse> => {
   const response = await apiClient.get('/api/match/cards');
   const data = response.data as ApiResponse<DailyCardsResponse>;
-  return data.data ?? { cards: [], remainingSelectCount: 0 };
+  return data.data ?? { cards: [], remainingSelectCount: 0, dailySelectLimit: 2 };
 };
 
 export const selectCandidate = async (candidateId: string): Promise<SelectResult> => {

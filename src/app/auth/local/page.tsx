@@ -21,10 +21,11 @@ export default function LocalLoginPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await localLogin(email, password);
+      const result = await localLogin(email, password, localStorage.getItem('refCode'));
       if (!result.success || !result.data?.accessToken) {
         throw new Error('no token');
       }
+      localStorage.removeItem('refCode');
       setAccessToken(result.data.accessToken);
 
       const { complete } = await getProfileComplete();

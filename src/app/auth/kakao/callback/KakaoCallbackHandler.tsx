@@ -27,10 +27,13 @@ export default function KakaoCallbackHandler() {
 
     const handleCallback = async () => {
       try {
-        const result = await kakaoCallback(code);
+        // 초대 링크로 유입된 경우 ref 코드 첨부 — 신규 가입에만 반영되고 백엔드가 검증
+        const refCode = localStorage.getItem('refCode');
+        const result = await kakaoCallback(code, refCode);
         if (!result.success || !result.data?.accessToken) {
           throw new Error('토큰 없음');
         }
+        localStorage.removeItem('refCode');
         setAccessToken(result.data.accessToken);
 
         const { complete } = await getProfileComplete();

@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { selectCandidate, sendNote, resetMyDailyCards } from '@/lib/api/match';
+import { getMyReferral } from '@/lib/api/referral';
+import { shareInviteToKakao } from '@/lib/utils/kakaoShare';
 import { useMatchCards } from '@/lib/hooks/useMatchCards';
 import { handleApiError } from '@/lib/api/handleApiError';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -11,7 +13,7 @@ import { SelectResult } from '@/lib/types/match.types';
 import MatchCardList from '@/components/match/MatchCardList';
 import Button from '@/components/ui/Button';
 import IconBadge from '@/components/ui/IconBadge';
-import { Calendar, Heart, Loader2, Mail, Moon, Search } from 'lucide-react';
+import { Calendar, Heart, Loader2, Mail, Moon, Search, UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function MatchPage() {
@@ -29,6 +31,25 @@ export default function MatchPage() {
   // 쪽지 작성 모달
   const [noteContent, setNoteContent] = useState('');
   const [isSendingNote, setIsSendingNote] = useState(false);
+  // 초대 링크 복사
+  const [isCopyingInvite, setIsCopyingInvite] = useState(false);
+
+  const handleInvite = async () => {
+    if (isCopyingInvite) return;
+    setIsCopyingInvite(true);
+    try {
+      const { code } = await getMyReferral();
+      // 카카오톡 공유 우선 — SDK 미탑재/실패 시 클립보드 복사로 폴백
+      if (!shareInviteToKakao(code)) {
+        await navigator.clipboard.writeText(`${window.location.origin}/invite/${code}`);
+        toast.success('초대 링크를 복사했어요! 친구에게 공유해 보세요');
+      }
+    } catch (err) {
+      toast.error(handleApiError(err));
+    } finally {
+      setIsCopyingInvite(false);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -59,7 +80,7 @@ export default function MatchPage() {
         // 선택 후 남은 횟수 반영
         if (state.type === 'cards') {
           const newRemaining = Math.max(0, state.remainingSelectCount - 1);
-          setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
+          setState({ ...state, remainingSelectCount: newRemaining });
         }
       }
     } catch (err) {
@@ -84,7 +105,7 @@ export default function MatchPage() {
       // 선택 후 남은 횟수 반영
       if (state.type === 'cards') {
         const newRemaining = Math.max(0, state.remainingSelectCount - 1);
-        setState({ type: 'cards', cards: state.cards, remainingSelectCount: newRemaining });
+        setState({ ...state, remainingSelectCount: newRemaining });
       }
     } catch (err) {
       toast.error(handleApiError(err));
@@ -213,9 +234,15 @@ export default function MatchPage() {
               받은 쪽지나 연락처를 확인해 보세요!
             </p>
           </div>
-          <Link href="/match/received">
-            <Button variant="secondary" size="lg">수신함 보기</Button>
-          </Link>
+          <div className="flex flex-col items-center gap-2">
+            <Button variant="primary" size="lg" onClick={handleInvite} isLoading={isCopyingInvite}>
+              <UserPlus className="h-4 w-4" />
+              친구 초대하고 오늘 선택 +1
+            </Button>
+            <Link href="/match/received">
+              <Button variant="secondary" size="lg">수신함 보기</Button>
+            </Link>
+          </div>
         </div>
       )}
 
@@ -244,7 +271,7 @@ export default function MatchPage() {
             <p className="text-xs text-brand-mid">
               남은 선택{' '}
               <span className={`font-semibold ${state.remainingSelectCount <= 1 ? 'text-brand-rose' : 'text-brand-dark'}`}>
-                {state.remainingSelectCount}/3
+                {state.remainingSelectCount}/{state.dailySelectLimit}
               </span>
             </p>
           </div>
@@ -255,6 +282,21 @@ export default function MatchPage() {
               <p>오늘 선택을 모두 사용했어요. 내일 자정에 초기화돼요.</p>
             </div>
           )}
+
+          {/* 친구 초대 배너 — 초대한 친구가 인증까지 완료하면 당일 선택 +1 */}
+          <button
+            onClick={handleInvite}
+            disabled={isCopyingInvite}
+            className="flex items-center gap-3 px-4 py-3 bg-brand-rose-light border border-brand-rose/15 rounded-2xl text-left transition-all active:scale-[0.99] disabled:opacity-60"
+          >
+            <div className="w-8 h-8 rounded-xl bg-brand-rose/10 flex items-center justify-center flex-shrink-0">
+              <UserPlus className="w-4 h-4 text-brand-rose" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-brand-dark">친구 초대하고 오늘 선택 +1</p>
+              <p className="text-xs text-brand-mid mt-0.5">친구가 가입하고 학생인증까지 마치면 적용돼요</p>
+            </div>
+          </button>
 
           <MatchCardList
             cards={state.cards}

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
+import KakaoScript from '@/components/KakaoScript';
 import './globals.css';
 
 export const metadata: Metadata = {
+  // OG 이미지 절대 URL 생성 기준 — 카카오/SNS 크롤러는 상대 경로를 읽지 못함
+  metadataBase: new URL('https://www.campushanjang.kr'),
   title: '캠퍼스한장',
   description: '사진 한 장으로 느낌을 보고, 이상형이 맞으면 바로 연결 — 대학생 전용 매칭 서비스',
   keywords: ['대학생 소개팅', '캠퍼스 매칭', '대학교 이상형', '번호 교환', '대학생 만남'],
@@ -38,6 +41,7 @@ export default function RootLayout({
         <div className="mx-auto max-w-md min-h-screen relative">
           {children}
         </div>
+        <KakaoScript />
         <Toaster
           position="top-center"
           toastOptions={{
