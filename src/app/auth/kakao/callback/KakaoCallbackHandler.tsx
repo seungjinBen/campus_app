@@ -29,7 +29,9 @@ export default function KakaoCallbackHandler() {
       try {
         // 초대 링크로 유입된 경우 ref 코드 첨부 — 신규 가입에만 반영되고 백엔드가 검증
         const refCode = localStorage.getItem('refCode');
-        const result = await kakaoCallback(code, refCode);
+        // state — 백엔드가 발급한 CSRF 방어 토큰을 그대로 되돌려준다 (쿠키와 대조됨)
+        const state = searchParams.get('state');
+        const result = await kakaoCallback(code, refCode, state);
         if (!result.success || !result.data?.accessToken) {
           throw new Error('토큰 없음');
         }

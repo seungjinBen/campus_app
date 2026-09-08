@@ -38,8 +38,10 @@ export default function SplashPage() {
     const refCode = new URLSearchParams(window.location.search).get('ref');
     if (refCode) localStorage.setItem('refCode', refCode);
 
-    const token = localStorage.getItem('accessToken');
-    if (!token) return;
+    // 토큰은 메모리에만 있으므로(새로고침 시 소실) 로그인 힌트 플래그로 판단 —
+    // 실제 인증은 아래 API 호출이 401 → refresh 쿠키로 검증한다
+    const hasSession = localStorage.getItem('hasSession');
+    if (!hasSession) return;
     setIsRedirecting(true);
     getProfileComplete()
       // 미완성 유저는 학생인증(1단계)부터 — 이미 인증된 경우 verify 페이지가 profile로 넘겨줌

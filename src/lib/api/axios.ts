@@ -8,11 +8,9 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
@@ -50,7 +48,6 @@ apiClient.interceptors.response.use(
           { withCredentials: true }
         );
         const newToken = data.data.accessToken as string;
-        localStorage.setItem('accessToken', newToken);
         useAuthStore.getState().setAccessToken(newToken);
         refreshQueue.forEach((cb) => cb(newToken));
         refreshQueue = [];
@@ -60,8 +57,11 @@ apiClient.interceptors.response.use(
           return apiClient(originalRequest);
         }
       } catch {
-        localStorage.removeItem('accessToken');
-        window.location.href = '/';
+        useAuthStore.getState().logout();
+        // 랜딩('/')에서 refresh 실패 시 href 재할당은 무한 리로드를 유발한다
+        if (window.location.pathname !== '/') {
+          window.location.href = '/';
+        }
         return Promise.reject(error);
       } finally {
         isRefreshing = false;

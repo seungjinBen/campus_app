@@ -1,23 +1,25 @@
 import apiClient from './axios';
+import { useAuthStore } from '../store/authStore';
 
 export const getKakaoAuthUrl = (): string => {
   return `${process.env.NEXT_PUBLIC_API_URL}/api/auth/kakao`;
 };
 
-export const kakaoCallback = async (code: string, ref?: string | null) => {
+export const kakaoCallback = async (code: string, ref?: string | null, state?: string | null) => {
   const refParam = ref ? `&ref=${encodeURIComponent(ref)}` : '';
-  const response = await apiClient.get(`/api/auth/kakao/callback?code=${code}${refParam}`);
+  const stateParam = state ? `&state=${encodeURIComponent(state)}` : '';
+  const response = await apiClient.get(`/api/auth/kakao/callback?code=${encodeURIComponent(code)}${refParam}${stateParam}`);
   return response.data as { success: boolean; data: { accessToken: string; isNewUser: boolean; role: string } | null; error: { code: string; message: string } | null };
 };
 
 export const logout = async () => {
   await apiClient.post('/api/auth/logout');
-  localStorage.removeItem('accessToken');
+  useAuthStore.getState().logout();
 };
 
 export const deleteAccount = async () => {
   await apiClient.delete('/api/users/me');
-  localStorage.removeItem('accessToken');
+  useAuthStore.getState().logout();
 };
 
 export const refreshToken = async (): Promise<{ accessToken: string }> => {
