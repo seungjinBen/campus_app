@@ -134,7 +134,13 @@ export default function VerifyPage() {
         current={1}
         total={5}
         title="세종대 학생 인증"
-        description="학생앱의 모바일 신분증(QR) 화면을 캡처해서 올려주세요. AI가 바로 확인해 드려요"
+        description={
+          <>
+            학생앱의 모바일 신분증(QR) 화면을 캡처해서 올려주세요.
+            <br />
+            AI가 바로 확인해드려요
+          </>
+        }
       />
 
       {state.type === 'checking' && (

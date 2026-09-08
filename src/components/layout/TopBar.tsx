@@ -14,7 +14,9 @@ export default function TopBar({ title, showBack = false, right }: TopBarProps) 
   const router = useRouter();
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-brand-sand/60 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+    // 흰 바 + 경계선을 두면 PC(max-w-md 잘림)에서 배경 위에 뜬 사각형처럼 보인다 —
+    // 배경색에 녹이고 위계는 여백과 타이포로만 준다
+    <header className="flex items-center justify-between px-4 py-4">
       <div className="w-10">
         {showBack && (
           <button

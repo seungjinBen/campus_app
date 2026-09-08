@@ -14,7 +14,9 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 flex bg-white border-t border-brand-sand/60 max-w-md mx-auto shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+    // 랜딩 하단 CTA와 동일한 처리 — 흰 패널/경계선 대신 배경색 페이드로,
+    // PC에서 max-w-md 잘린 흰 사각형 경계가 드러나지 않게 한다
+    <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-end max-w-md mx-auto pt-8 bg-gradient-to-t from-brand-cream via-brand-cream to-brand-cream/0">
       {navItems.map(({ href, label, icon: Icon }) => {
         const isActive = pathname === href;
         return (

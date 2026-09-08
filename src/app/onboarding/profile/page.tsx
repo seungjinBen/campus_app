@@ -157,10 +157,9 @@ export default function ProfilePage() {
         <p className="text-sm font-semibold text-brand-rose">💝 연락처 공개 원칙</p>
         <ul className="flex flex-col gap-2 text-sm text-brand-mid">
           {[
-            '내가 상대를 선택했을 때, 내 특징이 상대의 이상형과 70% 이상 맞으면 → 상대 연락처를 바로 확인할 수 있어요',
-            '70% 미만이면 → 50자 이내 쪽지로 먼저 마음을 전해요',
+            '내가 상대를 선택했을 때, 내 특징이 상대의 이상형과 75% 이상 맞으면 → 상대 연락처를 바로 확인할 수 있어요',
+            '75% 미만이면 → 50자 이내 쪽지로 먼저 마음을 전해요',
             '상대가 나를 선택하면 → 수신함에서 누가 열람했는지, 어떤 쪽지를 보냈는지 확인할 수 있어요',
-            '하루 최대 3번만 선택할 수 있어요',
           ].map((text) => (
             <li key={text} className="flex items-start gap-2">
               <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-rose flex-shrink-0" />

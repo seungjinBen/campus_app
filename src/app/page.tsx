@@ -58,19 +58,22 @@ export default function SplashPage() {
         </div>
       )}
       {/* 스크롤 영역 */}
-      <div className="flex-1 overflow-y-auto pb-36">
+      <div className="flex-1 overflow-y-auto pb-44">
 
         {/* ── ① HERO ─────────────────────────────────── */}
-        <section className="min-h-[92dvh] flex flex-col items-center justify-center px-6 pt-8 pb-6 relative">
-          {/* 시즌 뱃지 */}
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-rose/25 text-xs font-medium text-brand-rose bg-brand-rose-light mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-rose inline-block" />
+        <section className="min-h-[92dvh] flex flex-col items-center justify-center px-6 pt-4 pb-28 relative">
+          {/* 시즌 라벨 — 알약/테두리 없이 자간 넓은 라벨만. 강조색은 라이브 도트에만 */}
+          <span className="inline-flex items-center gap-2 mb-9 translate-y-2 text-[11px] font-medium tracking-[0.14em] text-brand-mid">
+            <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-brand-rose opacity-60 animate-ping motion-reduce:hidden" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-rose" />
+            </span>
             2026 세종대학교 가을축제
           </span>
 
-          <div className="flex items-center gap-2 mb-8">
-            <CampusLogo size={36} />
-            <h1 className="text-xl font-bold text-brand-dark tracking-tight">캠퍼스한장</h1>
+          <div className="flex flex-col items-center gap-2.5 mb-8">
+            <CampusLogo size={88} />
+            <h1 className="text-sm font-semibold text-brand-dark tracking-tight">캠퍼스한장</h1>
           </div>
 
           {/* 인터랙티브 카드 스택 */}
@@ -216,7 +219,9 @@ export default function SplashPage() {
       </div>
 
       {/* ── ⑦ 하단 고정 CTA ──────────────────────────── */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto px-6 pt-4 pb-7 flex flex-col items-center gap-3 bg-white border-t border-brand-sand shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+      {/* z-40 — 히어로 카피의 z-10 하이라이트(이상형)가 CTA 바를 뚫고 올라오는 것 방지.
+          흰 패널 대신 배경색 페이드 — PC(max-w-md 잘림)에서 흰 사각형 경계가 드러나지 않도록 */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto px-6 pt-10 pb-7 flex flex-col items-center gap-3 bg-gradient-to-t from-brand-cream via-brand-cream to-brand-cream/0">
         <label className="flex items-start gap-2.5 w-full max-w-xs cursor-pointer">
           <input
             type="checkbox"

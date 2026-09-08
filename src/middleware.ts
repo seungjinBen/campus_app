@@ -22,6 +22,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// /auth/local은 로그인 진입 페이지라 쿠키 요구 대상이 아님 — prod 차단은 백엔드 @Profile이 담당
 export const config = {
   matcher: [
     '/onboarding/:path*',
@@ -29,6 +30,5 @@ export const config = {
     '/settings/:path*',
     '/settings',
     '/admin/:path*',
-    '/auth/local',
   ],
 };

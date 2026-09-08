@@ -2,7 +2,8 @@ interface StepIndicatorProps {
   current: number;
   total: number;
   title: string;
-  description?: string;
+  // 줄바꿈이 필요한 안내 문구를 위해 ReactNode 허용 (기존 문자열 사용처는 그대로 동작)
+  description?: React.ReactNode;
 }
 
 export default function StepIndicator({ current, total, title, description }: StepIndicatorProps) {
