@@ -11,9 +11,11 @@ import { handleApiError } from '@/lib/api/handleApiError';
 import { useAuthStore } from '@/lib/store/authStore';
 import { SelectResult } from '@/lib/types/match.types';
 import MatchCardList from '@/components/match/MatchCardList';
+import MatchCardSkeleton from '@/components/match/MatchCardSkeleton';
+import HeartBurst from '@/components/match/HeartBurst';
 import Button from '@/components/ui/Button';
 import IconBadge from '@/components/ui/IconBadge';
-import { Calendar, Heart, Loader2, Mail, Moon, Search, UserPlus } from 'lucide-react';
+import { Calendar, Check, Copy, Heart, Mail, Moon, Search, UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function MatchPage() {
@@ -33,6 +35,18 @@ export default function MatchPage() {
   const [isSendingNote, setIsSendingNote] = useState(false);
   // 초대 링크 복사
   const [isCopyingInvite, setIsCopyingInvite] = useState(false);
+  // 연락처 복사 완료 표시 — 2초 뒤 원래 상태로
+  const [contactCopied, setContactCopied] = useState(false);
+
+  const handleCopyContact = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setContactCopied(true);
+      setTimeout(() => setContactCopied(false), 2000);
+    } catch {
+      toast.error('복사에 실패했어요. 길게 눌러 직접 복사해 주세요');
+    }
+  };
 
   const handleInvite = async () => {
     if (isCopyingInvite) return;
@@ -157,10 +171,11 @@ export default function MatchPage() {
       )}
 
       {state.type === 'loading' && (
-        <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-brand-rose" />
-          <p className="text-sm text-brand-mid">카드를 불러오는 중이에요...</p>
-        </div>
+        <>
+          {/* 스피너 대신 카드 골격 — 실제 카드와 같은 높이를 미리 차지해 도착 시 화면이 밀리지 않는다 */}
+          <p className="sr-only" role="status">카드를 불러오는 중이에요</p>
+          <MatchCardSkeleton />
+        </>
       )}
 
       {state.type === 'terminated' && (
@@ -318,11 +333,11 @@ export default function MatchPage() {
       {/* 선택 확인 모달 */}
       {confirmingId && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fadeIn"
           onClick={() => setConfirmingId(null)}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
+            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal animate-sheetUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
@@ -351,29 +366,55 @@ export default function MatchPage() {
         </div>
       )}
 
-      {/* 선택 결과 모달 — CONTACT_REVEALED */}
+      {/* 선택 결과 모달 — CONTACT_REVEALED. 서비스에서 가장 감정이 고조되는 순간이라
+          모달 진입 → 하트 pop → 파티클 → 연락처 지연 등장의 시퀀스로 연출한다 */}
       {selectResult?.type === 'CONTACT_REVEALED' && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fadeIn"
           onClick={() => setSelectResult(null)}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
+            className="relative bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal animate-sheetUp"
             onClick={(e) => e.stopPropagation()}
           >
+            <HeartBurst />
             <div className="text-center">
               <div className="flex justify-center mb-3">
-                <IconBadge icon={Heart} />
+                <div className="animate-popIn [animation-delay:120ms]">
+                  <IconBadge icon={Heart} />
+                </div>
               </div>
               <p className="font-bold text-brand-dark text-lg whitespace-pre-line">
                 {selectResult.message.replace(/\s*💘\s*/g, '\n')}
               </p>
               {selectResult.contactValue && (
-                <div className="mt-4 p-3 bg-brand-cream rounded-xl">
-                  <p className="text-xs text-brand-mid mb-1">
-                    {selectResult.contactType === 'INSTAGRAM' ? '인스타그램' : '카카오톡'}
-                  </p>
-                  <p className="font-semibold text-brand-dark text-base">{selectResult.contactValue}</p>
+                // 0.4초 지연 — 축하 문구를 먼저 읽히고 연락처를 뒤이어 공개하는 "두구두구" 간격
+                <div className="mt-4 p-3 bg-brand-cream rounded-xl flex items-center gap-3 animate-riseIn [animation-delay:400ms]">
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-xs text-brand-mid mb-1">
+                      {selectResult.contactType === 'INSTAGRAM' ? '인스타그램' : '카카오톡'}
+                    </p>
+                    <p className="font-semibold text-brand-dark text-base break-all">
+                      {selectResult.contactValue}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCopyContact(selectResult.contactValue!)}
+                    className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-brand-sand text-xs font-semibold text-brand-mid transition-transform duration-200 ease-spring active:scale-90"
+                    aria-label="연락처 복사"
+                  >
+                    {contactCopied ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-brand-rose" />
+                        복사됨
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        복사
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
@@ -387,11 +428,11 @@ export default function MatchPage() {
       {/* 쪽지 작성 모달 — NOTE_REQUIRED */}
       {selectResult?.type === 'NOTE_REQUIRED' && (
         <div
-          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4 animate-fadeIn"
           onClick={() => { setSelectResult(null); setNoteContent(''); }}
         >
           <div
-            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal"
+            className="bg-white rounded-3xl p-6 w-full max-w-md flex flex-col gap-4 shadow-modal animate-sheetUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">

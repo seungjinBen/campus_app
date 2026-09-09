@@ -8,3 +8,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* OS "동작 줄이기"를 켠 유저 — 튀고 흩날리는 모션은 전정기관 질환자에게 어지럼증을 유발한다 (WCAG 2.3.3).
+   개별 컴포넌트에서 빠뜨려도 여기서 잡히도록 전역 안전망을 둔다.
+   JS로 생성되는 하트 파티클은 CSS로 막을 수 없어 usePrefersReducedMotion으로 별도 차단한다. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

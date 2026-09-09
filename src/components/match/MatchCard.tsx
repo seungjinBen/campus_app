@@ -26,8 +26,14 @@ export default function MatchCard({ card, index, onSelect, isSelecting }: MatchC
   const cardNo = `NO. ${String(index).padStart(2, '0')}`;
   const header = card.university ? `${cardNo} · ${card.university}` : cardNo;
 
+  // 카드가 한꺼번에 나타나지 않고 순서대로 올라오도록 stagger — 10장 넘게 밀리지 않게 상한을 둔다
+  const enterDelay = `${Math.min(index - 1, 6) * 60}ms`;
+
   return (
-    <div className="flex flex-col gap-3 animate-fadeIn">
+    <div
+      className="flex flex-col gap-3 animate-riseIn"
+      style={{ animationDelay: enterDelay }}
+    >
       {/* NO. XX · 대학교 */}
       <p className="text-xs font-semibold text-brand-mid tracking-wide px-1">{header}</p>
 
@@ -71,7 +77,7 @@ export default function MatchCard({ card, index, onSelect, isSelecting }: MatchC
         <button
           onClick={() => onSelect(card.candidateId)}
           disabled={isSelecting}
-          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-dark text-white text-sm font-semibold disabled:opacity-50 active:scale-95 transition-all"
+          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand-dark text-white text-sm font-semibold disabled:opacity-50 active:scale-90 transition-transform duration-200 ease-spring"
         >
           {isSelecting ? '선택 중' : '선택 →'}
         </button>
