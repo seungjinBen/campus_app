@@ -14,6 +14,9 @@ const config: Config = {
           mid: "#6B7280",
           light: "#9CA3AF",
           rose: "#F97066",
+          // 텍스트 전용 진한 로즈 — 흰/크림/rose-light 배경에서 WCAG 대비 4.5:1 충족 (a11y)
+          // 원본 rose(#F97066)는 3.1:1이라 작은 텍스트에 사용 금지, 배경·아이콘·큰 요소에만 사용
+          "rose-deep": "#C0392B",
           "rose-light": "#FEF2F0",
           cream: "#F8F8FA",
           warm: "#F3F4F6",

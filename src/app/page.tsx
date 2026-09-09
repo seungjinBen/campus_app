@@ -211,7 +211,7 @@ export default function SplashPage() {
             </div>
             <div className="border-t border-brand-sand pt-3 text-center">
               <p className="text-xs text-brand-mid">
-                지난 봄 시즌, <span className="font-bold text-brand-rose">226명</span>이 함께했어요
+                지난 봄 시즌, <span className="font-bold text-brand-rose-deep">226명</span>이 함께했어요
               </p>
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function SplashPage() {
           />
           <span className="text-xs text-brand-mid leading-snug">
             이상형 일치 시 내 연락처가 상대방에게 공개되는 것에 동의합니다{' '}
-            <span className="text-brand-rose font-medium">(필수)</span>
+            <span className="text-brand-rose-deep font-medium">(필수)</span>
           </span>
         </label>
         <KakaoLoginButton disabled={!agreed} />

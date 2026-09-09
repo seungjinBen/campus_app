@@ -22,7 +22,7 @@ export default function MockMatchCard({ nickname, birthYear, dept, accent, gradi
             <span className="font-bold text-brand-dark text-base">{nickname}</span>
             <span className="text-xs text-brand-mid">{birthYear}</span>
           </div>
-          <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-rose-light text-brand-rose font-semibold">
+          <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-rose-light text-brand-rose-deep font-semibold">
             {chip}
           </span>
         </div>

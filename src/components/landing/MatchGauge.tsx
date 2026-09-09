@@ -38,13 +38,14 @@ export default function MatchGauge() {
       <div className="bg-white rounded-2xl border border-brand-sand shadow-card p-4 flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-brand-mid">이상형 일치율</span>
-          <span className={cn('text-lg font-bold tabular-nums', revealed ? 'text-brand-rose' : 'text-brand-dark')}>
+          <span className={cn('text-lg font-bold tabular-nums', revealed ? 'text-brand-rose-deep' : 'text-brand-dark')}>
             {percent}%
           </span>
         </div>
         <div
           className="w-full h-2.5 bg-brand-warm rounded-full overflow-hidden"
           role="progressbar"
+          aria-label="이상형 일치율"
           aria-valuenow={percent}
           aria-valuemin={0}
           aria-valuemax={100}
