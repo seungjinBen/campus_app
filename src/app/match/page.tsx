@@ -227,10 +227,9 @@ export default function MatchPage() {
           <IconBadge icon={Calendar} />
           <div>
             <p className="text-xl font-bold text-brand-dark">곧 시작돼요</p>
-            {/* TODO: 기획 확인 필요 — 가을축제 오픈일 확정 시 날짜 명시 */}
             <p className="text-sm text-brand-mid mt-3 leading-relaxed">
-              매칭은 <span className="font-semibold text-brand-rose">축제 기간</span>에 공식 오픈돼요.<br />
-              조금만 기다려 주세요!
+              매칭은 <span className="font-semibold text-brand-rose">9월 28일(월)</span>에 공식 오픈돼요.<br />
+              <span className="font-semibold text-brand-dark">9.28 – 10.2</span> 세종대 축제가 열리는 해당 주 동안 이용할 수 있어요.
             </p>
           </div>
           <Link href="/settings">
