@@ -26,12 +26,43 @@ function SectionBar() {
   return <div className="w-10 h-[3px] rounded-full bg-brand-rose/50 mb-3" aria-hidden="true" />;
 }
 
+function toDisplayTarget(count: number): number {
+  return count < 40 ? 30 : Math.floor(count / 10) * 10;
+}
+
 export default function SplashPage() {
   const router = useRouter();
   // LCP 최적화 — 비로그인 방문자(랜딩의 주 대상)는 인증 체크를 기다리지 않고 즉시 콘텐츠를 본다.
   // 토큰이 있는 유저에게만 리다이렉트 오버레이를 띄운다 (첫 페인트가 하이드레이션에 묶이지 않도록)
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [targetCount, setTargetCount] = useState(30);
+  const [displayCount, setDisplayCount] = useState(0);
+
+  // 카운트업 애니메이션 — targetCount가 바뀔 때마다 0에서 올라옴
+  useEffect(() => {
+    const duration = 1000;
+    const start = performance.now();
+    const to = targetCount;
+    let raf: number;
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setDisplayCount(Math.round(to * eased));
+      if (progress < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [targetCount]);
+
+  useEffect(() => {
+    fetch('/api/service-status')
+      .then((r) => r.json())
+      .then(({ memberCount }) => {
+        if (typeof memberCount === 'number') setTargetCount(toDisplayTarget(memberCount));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     // 초대 링크 ?ref= 캡처 — 가입(카카오 콜백) 시 백엔드에 전달 (useSearchParams 대신 window 사용 — Suspense 요구 회피)
@@ -69,6 +100,8 @@ export default function SplashPage() {
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-rose" />
             </span>
             2026 세종대학교 가을축제
+            <span className="text-brand-light" aria-hidden="true">·</span>
+            <span className="text-brand-rose-deep">{displayCount}+명 가입중</span>
           </span>
 
           <div className="flex flex-col items-center gap-2.5 mb-8">
@@ -211,7 +244,7 @@ export default function SplashPage() {
             </div>
             <div className="border-t border-brand-sand pt-3 text-center">
               <p className="text-xs text-brand-mid">
-                지난 봄 시즌, <span className="font-bold text-brand-rose-deep">226명</span>이 함께했어요
+                지난 봄시즌, <span className="font-bold text-brand-rose-deep">225명</span>이 함께했어요
               </p>
             </div>
           </div>
