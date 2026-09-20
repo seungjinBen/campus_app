@@ -136,9 +136,9 @@ export default function VerifyPage() {
         title="세종대 학생 인증"
         description={
           <>
-            학생앱의 모바일 신분증(QR) 화면을 캡처해서 올려주세요.
+            세종대 모바일 앱 → 하단 <strong>My QR</strong> → 화면 캡처 후 업로드해 주세요.
             <br />
-            AI가 바로 확인해드려요
+            AI가 자동으로 판단하며, 평균 <strong>8초</strong> 안에 인증이 완료돼요.
           </>
         }
       />
@@ -176,14 +176,15 @@ export default function VerifyPage() {
               <ImagePlus className="h-10 w-10" />
               <div className="text-center">
                 <p className="text-sm font-medium">캡처 화면을 클릭해서 올려주세요</p>
-                <p className="text-xs mt-1">학생앱 → 모바일 신분증 → 화면 캡처</p>
+                <p className="text-xs mt-1">세종대 모바일 앱 → 하단 My QR → 화면 캡처</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-xs text-brand-mid leading-relaxed">
-            캡처 화면의 이름·학번·학과·생년월일은 인증에만 사용되며, 매칭 화면에는 닉네임만 표시돼요.
-            인증이 완료되면 생년월일과 학과 입력 단계를 건너뛸 수 있어요.
+          <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-xs text-brand-mid leading-relaxed space-y-1.5">
+            <p>인증이 완료되면 생년월일·학과 입력 단계를 건너뛸 수 있어요.</p>
+            <p>이름·학번·학과·생년월일은 인증 확인 용도로만 사용되며, 매칭 화면에는 닉네임만 표시돼요.</p>
+            <p>수집된 개인정보는 암호화되어 안전하게 저장되며, 인증 외 목적으로 활용하거나 외부에 제공하지 않아요.</p>
           </div>
         </>
       )}
