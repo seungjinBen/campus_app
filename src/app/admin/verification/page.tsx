@@ -130,6 +130,9 @@ export default function AdminVerificationPage() {
                   <p className="font-semibold text-brand-dark text-sm">
                     {item.nickname ?? '(닉네임 미설정)'}
                   </p>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-brand-sand/60 text-brand-mid font-medium">
+                    {item.verificationMethod === 'EVERYTIME_PROFILE' ? '에브리타임' : '세종대 QR'}
+                  </span>
                 </div>
                 {item.confidenceScore != null && (
                   <span className="text-xs px-2 py-0.5 rounded-full bg-brand-warm text-brand-mid font-medium">

@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   submitVerification,
+  submitSupplementaryInfo,
   getVerificationStatus,
   VerificationSubmitResult,
+  VerificationMethod,
 } from '@/lib/api/verification';
 import { useOnboardingStore } from '@/lib/store/onboardingStore';
 import { handleApiError } from '@/lib/api/handleApiError';
@@ -20,9 +22,11 @@ type VerifyState =
   | { type: 'checking' }
   | { type: 'idle' }
   | { type: 'analyzing' }
-  | { type: 'approved'; university: string | null; department: string | null }
+  | { type: 'approved'; university: string | null; department: string | null; needsSupplementaryInfo: boolean }
   | { type: 'retry'; guide: string }
   | { type: 'review' }
+  // 에브리타임 경로 승인 후 학과·생년월일이 화면에 없어 별도로 입력받는 화면 (5단계 카운트에는 포함하지 않음)
+  | { type: 'supplementary' }
   | { type: 'rejected'; reason: string };
 
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
@@ -33,12 +37,39 @@ const ANALYZING_MESSAGES = [
   '학과 정보를 대조하고 있어요...',
 ];
 
+// 인증 방법별 안내 문구 — 에브리타임은 안드로이드에서 세종대 앱 QR 캡처가 안 되는 유저를 위한 대체 경로
+const METHOD_COPY: Record<VerificationMethod, { description: React.ReactNode; dropzoneHint: string }> = {
+  SEJONG_QR: {
+    description: (
+      <>
+        세종대 모바일 앱 → 하단 <strong>My QR</strong> → 화면 캡처 후 업로드해 주세요.
+        <br />
+        AI가 자동으로 판단하며, 평균 <strong>8초</strong> 안에 인증이 완료돼요.
+      </>
+    ),
+    dropzoneHint: '세종대 모바일 앱 → 하단 My QR → 화면 캡처',
+  },
+  EVERYTIME_PROFILE: {
+    description: (
+      <>
+        에브리타임 앱 → 우측 상단 프로필 아이콘 → <strong>내 정보</strong> → 화면 캡처 후 업로드해 주세요.
+        <br />
+        학과·생년월일은 이 화면에 없어서 인증 후 따로 입력받아요.
+      </>
+    ),
+    dropzoneHint: '에브리타임 앱 → 프로필 → 내 정보 → 화면 캡처',
+  },
+};
+
 export default function VerifyPage() {
   const router = useRouter();
   const { setStep, setVerified } = useOnboardingStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<VerifyState>({ type: 'checking' });
+  const [method, setMethod] = useState<VerificationMethod>('SEJONG_QR');
   const [analyzingIdx, setAnalyzingIdx] = useState(0);
+  const [supplementaryForm, setSupplementaryForm] = useState({ department: '', birthDate: '' });
+  const [submittingSupplementary, setSubmittingSupplementary] = useState(false);
   const checked = useRef(false);
 
   useEffect(() => {
@@ -48,8 +79,12 @@ export default function VerifyPage() {
     getVerificationStatus()
       .then((res) => {
         if (res.verified) {
-          setVerified(true);
-          router.replace('/onboarding/profile');
+          if (res.needsSupplementaryInfo) {
+            setState({ type: 'supplementary' });
+          } else {
+            setVerified(true);
+            router.replace('/onboarding/profile');
+          }
         } else if (res.status === 'NEEDS_REVIEW') {
           setState({ type: 'review' });
         } else {
@@ -77,7 +112,7 @@ export default function VerifyPage() {
     setAnalyzingIdx(0);
     setState({ type: 'analyzing' });
     try {
-      const result = await submitVerification(file);
+      const result = await submitVerification(file, method);
       applyResult(result);
     } catch (err) {
       toast.error(handleApiError(err));
@@ -88,7 +123,12 @@ export default function VerifyPage() {
   const applyResult = (result: VerificationSubmitResult) => {
     switch (result.status) {
       case 'AUTO_APPROVED':
-        setState({ type: 'approved', university: result.university, department: result.department });
+        setState({
+          type: 'approved',
+          university: result.university,
+          department: result.department,
+          needsSupplementaryInfo: result.needsSupplementaryInfo,
+        });
         break;
       case 'RETRY_REQUESTED':
         setState({ type: 'retry', guide: result.message });
@@ -106,10 +146,15 @@ export default function VerifyPage() {
     try {
       const res = await getVerificationStatus();
       if (res.verified) {
-        setVerified(true);
-        toast.success('인증이 완료됐어요!');
-        setStep(2);
-        router.push('/onboarding/profile');
+        if (res.needsSupplementaryInfo) {
+          toast.success('인증이 완료됐어요! 학과와 생년월일만 조금 더 알려주세요');
+          setState({ type: 'supplementary' });
+        } else {
+          setVerified(true);
+          toast.success('인증이 완료됐어요!');
+          setStep(2);
+          router.push('/onboarding/profile');
+        }
       } else if (res.status === 'REJECTED') {
         setState({ type: 'rejected', reason: '검수 결과 인증이 거절됐어요. 다시 시도해 주세요.' });
       } else {
@@ -121,9 +166,35 @@ export default function VerifyPage() {
   };
 
   const handleNext = () => {
+    if (state.type === 'approved' && state.needsSupplementaryInfo) {
+      setState({ type: 'supplementary' });
+      return;
+    }
     setVerified(true);
     setStep(2);
     router.push('/onboarding/profile');
+  };
+
+  const handleSupplementarySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supplementaryForm.department.trim() || !supplementaryForm.birthDate) {
+      toast.error('학과와 생년월일을 모두 입력해 주세요');
+      return;
+    }
+    setSubmittingSupplementary(true);
+    try {
+      await submitSupplementaryInfo({
+        department: supplementaryForm.department.trim(),
+        birthDate: supplementaryForm.birthDate,
+      });
+      setVerified(true);
+      setStep(2);
+      router.push('/onboarding/profile');
+    } catch (err) {
+      toast.error(handleApiError(err));
+    } finally {
+      setSubmittingSupplementary(false);
+    }
   };
 
   const openFilePicker = () => fileInputRef.current?.click();
@@ -134,13 +205,7 @@ export default function VerifyPage() {
         current={1}
         total={5}
         title="세종대 학생 인증"
-        description={
-          <>
-            세종대 모바일 앱 → 하단 <strong>My QR</strong> → 화면 캡처 후 업로드해 주세요.
-            <br />
-            AI가 자동으로 판단하며, 평균 <strong>8초</strong> 안에 인증이 완료돼요.
-          </>
-        }
+        description={state.type === 'supplementary' ? '학과와 생년월일만 조금 더 알려주세요.' : METHOD_COPY[method].description}
       />
 
       {state.type === 'checking' && (
@@ -152,6 +217,40 @@ export default function VerifyPage() {
 
       {(state.type === 'idle' || state.type === 'retry' || state.type === 'rejected') && (
         <>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setMethod('SEJONG_QR')}
+              className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
+                method === 'SEJONG_QR'
+                  ? 'border-brand-rose bg-brand-rose-light'
+                  : 'border-brand-sand bg-white hover:border-brand-rose/40'
+              }`}
+            >
+              <p className="text-sm font-semibold text-brand-dark">세종대 학생앱</p>
+              <p className="text-xs text-brand-mid mt-1">My QR 캡처</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMethod('EVERYTIME_PROFILE')}
+              className={`rounded-2xl border-2 px-4 py-3 text-left transition-colors ${
+                method === 'EVERYTIME_PROFILE'
+                  ? 'border-brand-rose bg-brand-rose-light'
+                  : 'border-brand-sand bg-white hover:border-brand-rose/40'
+              }`}
+            >
+              <p className="text-sm font-semibold text-brand-dark">에브리타임</p>
+              <p className="text-xs text-brand-mid mt-1">안드로이드 이용자용</p>
+            </button>
+          </div>
+
+          {method === 'EVERYTIME_PROFILE' && (
+            <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-xs text-brand-mid leading-relaxed">
+              세종대 앱의 QR 캡처가 일부 안드로이드 기기에서 되지 않아 추가한 대체 인증 방법이에요.
+              에브리타임 앱 → 우측 상단 프로필 아이콘 → <strong>내 정보</strong> 화면을 캡처해서 올려주세요.
+            </div>
+          )}
+
           {state.type === 'retry' && (
             <div className="bg-brand-rose-light border border-brand-rose/15 rounded-2xl px-4 py-4 flex items-start gap-3">
               <RefreshCw className="h-4 w-4 text-brand-rose flex-shrink-0 mt-0.5" />
@@ -176,13 +275,17 @@ export default function VerifyPage() {
               <ImagePlus className="h-10 w-10" />
               <div className="text-center">
                 <p className="text-sm font-medium">캡처 화면을 클릭해서 올려주세요</p>
-                <p className="text-xs mt-1">세종대 모바일 앱 → 하단 My QR → 화면 캡처</p>
+                <p className="text-xs mt-1">{METHOD_COPY[method].dropzoneHint}</p>
               </div>
             </div>
           </div>
 
           <div className="bg-brand-warm border border-brand-sand rounded-2xl px-4 py-3 text-xs text-brand-mid leading-relaxed space-y-1.5">
-            <p>인증이 완료되면 생년월일·학과 입력 단계를 건너뛸 수 있어요.</p>
+            {method === 'SEJONG_QR' ? (
+              <p>인증이 완료되면 생년월일·학과 입력 단계를 건너뛸 수 있어요.</p>
+            ) : (
+              <p>인증이 완료되면 학과·생년월일만 간단히 추가로 입력하면 끝나요.</p>
+            )}
             <p>이름·학번·학과·생년월일은 인증 확인 용도로만 사용되며, 매칭 화면에는 닉네임만 표시돼요.</p>
             <p>수집된 개인정보는 암호화되어 안전하게 저장되며, 인증 외 목적으로 활용하거나 외부에 제공하지 않아요.</p>
           </div>
@@ -210,13 +313,48 @@ export default function VerifyPage() {
               </p>
             )}
             <p className="text-xs text-brand-light mt-3">
-              생년월일과 학과 정보가 자동으로 등록됐어요
+              {state.needsSupplementaryInfo
+                ? '학과와 생년월일만 조금 더 알려주시면 끝나요'
+                : '생년월일과 학과 정보가 자동으로 등록됐어요'}
             </p>
           </div>
           <Button size="lg" fullWidth onClick={handleNext}>
-            다음
+            {state.needsSupplementaryInfo ? '추가 정보 입력하기' : '다음'}
           </Button>
         </div>
+      )}
+
+      {state.type === 'supplementary' && (
+        <form onSubmit={handleSupplementarySubmit} className="flex flex-col gap-6 py-6">
+          <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-brand-rose-light flex items-center justify-center mx-auto mb-4">
+              <ShieldCheck className="h-8 w-8 text-brand-rose" />
+            </div>
+            <p className="text-xl font-bold text-brand-dark">학과·생년월일을 알려주세요</p>
+            <p className="text-sm text-brand-mid mt-2 leading-relaxed">
+              에브리타임 화면에는 없는 정보라 따로 입력이 필요해요.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3">
+            <input
+              type="text"
+              placeholder="학과 (예: 컴퓨터공학과)"
+              value={supplementaryForm.department}
+              onChange={(e) => setSupplementaryForm((f) => ({ ...f, department: e.target.value }))}
+              maxLength={100}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-rose text-sm"
+            />
+            <input
+              type="date"
+              value={supplementaryForm.birthDate}
+              onChange={(e) => setSupplementaryForm((f) => ({ ...f, birthDate: e.target.value }))}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-rose text-sm"
+            />
+          </div>
+          <Button type="submit" size="lg" fullWidth isLoading={submittingSupplementary}>
+            완료
+          </Button>
+        </form>
       )}
 
       {state.type === 'review' && (

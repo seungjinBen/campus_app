@@ -50,6 +50,7 @@ export interface VerificationQueueItem {
   verificationId: string;
   userId: string;
   nickname: string | null;
+  verificationMethod: string;
   extractedUniversity: string | null;
   extractedName: string | null;
   extractedStudentNo: string | null;
