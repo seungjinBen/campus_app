@@ -80,12 +80,38 @@ export const adminGetVerificationQueue = async (): Promise<VerificationQueueItem
   return data.data ?? [];
 };
 
+export interface RejectedVerificationItem {
+  verificationId: string;
+  userId: string;
+  nickname: string | null;
+  verificationMethod: string;
+  extractedUniversity: string | null;
+  extractedStudentNo: string | null;
+  extractedName: string | null;
+  confidenceScore: number | null;
+  decisionReason: string | null;
+  adminRejectionNote: string | null;
+  rejectedBy: 'AI' | 'ADMIN';
+  rejectedAt: string;
+  createdAt: string;
+}
+
 export const adminReviewVerification = async (
   verificationId: string,
-  action: 'APPROVE' | 'REJECT'
+  action: 'APPROVE' | 'REJECT',
+  rejectionNote?: string
 ) => {
-  const response = await apiClient.post(`/api/admin/verification/${verificationId}/review`, { action });
+  const response = await apiClient.post(`/api/admin/verification/${verificationId}/review`, {
+    action,
+    ...(rejectionNote ? { rejectionNote } : {}),
+  });
   return response.data as ApiResponse<null>;
+};
+
+export const adminGetRejectedVerifications = async (): Promise<RejectedVerificationItem[]> => {
+  const response = await apiClient.get('/api/admin/verification/rejected');
+  const data = response.data as ApiResponse<RejectedVerificationItem[]>;
+  return data.data ?? [];
 };
 
 export const adminGetVerificationStats = async (): Promise<VerificationStats> => {
