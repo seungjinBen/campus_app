@@ -292,11 +292,13 @@ export default function AdminVerificationPage() {
                 </div>
 
                 {/* AI 판단 근거 */}
-                {item.decisionReason && (
+                {item.decisionReason ? (
                   <div className="bg-brand-warm rounded-xl px-3 py-2.5 text-xs text-brand-mid leading-relaxed">
                     <span className="font-semibold text-brand-dark">AI 판단: </span>
                     {item.decisionReason}
                   </div>
+                ) : (
+                  <p className="text-xs text-brand-light italic px-1">AI 판단 근거 미기록</p>
                 )}
 
                 {/* 관리자 거절 사유 */}
